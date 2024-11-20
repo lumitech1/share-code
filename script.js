@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Logic phát nhạc tự động
-    const audio = new Audio("https://on.soundcloud.com/PKzJTjzDEFbv7djA7"); // Đường dẫn tới file nhạc trên SoundCloud
+    const audio = new Audio("music.mp3"); // Đường dẫn tới file nhạc
     audio.autoplay = true; // Phát tự động
     audio.loop = true;     // Phát lại liên tục
     audio.volume = 0.5;    // Điều chỉnh âm lượng (0.0 đến 1.0)
