@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Chia Sẻ Mã Code - Nguyễn Hoàng Nam</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Popup -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <h2>Nam Nhắc Bạn!</h2>
+            <p id="current-date"></p>
+            <p>Chúc bạn một ngày vui vẻ, tràn đầy năng lượng!</p>
+            <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExem9oZnptbzkwMGh4azdxam80MDVnaGF5MHg4MDYyMGhncnU0cDRvdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gUiVIJC1ZYtdPVj4Nb/giphy.gif" alt="GIF vui vẻ" class="popup-gif">
+            <p>© 2024 Nguyễn Hoàng Nam.</p>
+            <button id="close-popup" class="popup-close-btn">Đóng</button>
+        </div>
+    </div>
+    <!-- Phần Code Thời Khóa Biểu -->
+    <section class="code-group">
+        <h1 class="main-title">Code Thời Khóa Biểu - © 2024 Nguyễn Hoàng Nam </h1>
+        <div class="container">
+            <!-- Khu vực HTML -->
+            <div class="code-section html-section">
+                <div class="header">CLB.html</div>
+                <div class="line-numbers-container">
+                    <div class="line-numbers"></div>
+                    <textarea id="clb.html" placeholder="Viết mã HTML của bạn tại đây..."></textarea>
+                </div>
+                <div class="buttons">
+                    <button onclick="copyToClipboard('clb.html')">Copy</button>
+                    <button onclick="downloadCode('clb.html', 'CLB.html')">Download</button>
+                </div>
+            </div>
+            <!-- Khu vực CSS -->
+            <div class="code-section css-section">
+                <div class="header">CSS</div>
+                <div class="line-numbers-container">
+                    <div class="line-numbers"></div>
+                    <textarea id="css-clb" placeholder="Viết mã CSS của bạn tại đây..."></textarea>
+                </div>
+                <div class="buttons">
+                    <button onclick="copyToClipboard('css-clb')">Copy</button>
+                    <button onclick="downloadCode('css-clb', 'styles.css')">Download</button>
+                </div>
+            </div>
+            <!-- Khu vực JavaScript -->
+            <div class="code-section js-section">
+                <div class="header">JavaScript</div>
+                <div class="line-numbers-container">
+                    <div class="line-numbers"></div>
+                    <textarea id="js-clb" placeholder="Viết mã JavaScript của bạn tại đây..."></textarea>
+                </div>
+                <div class="buttons">
+                    <button onclick="copyToClipboard('js-clb')">Copy</button>
+                    <button onclick="downloadCode('js-clb', 'script.js')">Download</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Phần Code Thông Tin -->
+    <section class="code-group">
+        <h1 class="main-title">Code Thông Tin - © 2024 Nguyễn Hoàng Nam </h1>
+        <div class="container">
+            <!-- Khu vực HTML -->
+            <div class="code-section html-section">
+                <div class="header">thong_tin.html</div>
+                <div class="line-numbers-container">
+                    <div class="line-numbers"></div>
+                    <textarea id="thong_tin.html" placeholder="Viết mã HTML của bạn tại đây..."></textarea>
+                </div>
+                <div class="buttons">
+                    <button onclick="copyToClipboard('thong_tin.html')">Copy</button>
+                    <button onclick="downloadCode('thong_tin.html', 'thong_tin.html')">Download</button>
+                </div>
+            </div>
+            <!-- Khu vực CSS -->
+            <div class="code-section css-section">
+                <div class="header">CSS</div>
+                <div class="line-numbers-container">
+                    <div class="line-numbers"></div>
+                    <textarea id="css-thongtin" placeholder="Viết mã CSS của bạn tại đây..."></textarea>
+                </div>
+                <div class="buttons">
+                    <button onclick="copyToClipboard('css-thongtin')">Copy</button>
+                    <button onclick="downloadCode('css-thongtin', 'styles.css')">Download</button>
+                </div>
+            </div>
+            <!-- Khu vực JavaScript -->
+            <div class="code-section js-section">
+                <div class="header">JavaScript</div>
+                <div class="line-numbers-container">
+                    <div class="line-numbers"></div>
+                    <textarea id="js-thongtin" placeholder="Viết mã JavaScript của bạn tại đây..."></textarea>
+                </div>
+                <div class="buttons">
+                    <button onclick="copyToClipboard('js-thongtin')">Copy</button>
+                    <button onclick="downloadCode('js-thongtin', 'script.js')">Download</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Phần Code Thời Khóa Biểu -->
+    <section class="code-group">
+        <h1 class="main-title">Code Thời Khóa Biểu Nâng Cao - © 2024 Nguyễn Hoàng Nam </h1>
+        <div class="container">
+            <!-- Khu vực HTML -->
+            <div class="code-section html-section">
+                <div class="header">tkb.html</div>
+                <div class="line-numbers-container">
+                    <div class="line-numbers"></div>
+                    <textarea id="tkb.html" placeholder="Viết mã HTML của bạn tại đây..."></textarea>
+                </div>
+                <div class="buttons">
+                    <button onclick="copyToClipboard('tkb.html')">Copy</button>
+                    <button onclick="downloadCode('tkb.html', 'tkb.html')">Download</button>
+                </div>
+            </div>
+            <!-- Khu vực CSS -->
+            <div class="code-section css-section">
+                <div class="header">CSS</div>
+                <div class="line-numbers-container">
+                    <div class="line-numbers"></div>
+                    <textarea id="css-tkb" placeholder="Viết mã CSS của bạn tại đây..."></textarea>
+                </div>
+                <div class="buttons">
+                    <button onclick="copyToClipboard('css-tkb')">Copy</button>
+                    <button onclick="downloadCode('css-tkb', 'styles.css')">Download</button>
+                </div>
+            </div>
+            <!-- Khu vực JavaScript -->
+            <div class="code-section js-section">
+                <div class="header">JavaScript</div>
+                <div class="line-numbers-container">
+                    <div class="line-numbers"></div>
+                    <textarea id="js-tkb" placeholder="Viết mã JavaScript của bạn tại đây..."></textarea>
+                </div>
+                <div class="buttons">
+                    <button onclick="copyToClipboard('js-tkb')">Copy</button>
+                    <button onclick="downloadCode('js-tkb', 'script.js')">Download</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+        © 2024 Nguyễn Hoàng Nam. All rights reserved.
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

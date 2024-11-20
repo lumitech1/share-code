@@ -1,0 +1,253 @@
+/* Reset mặc định */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1e1e1e;
+    color: #ffffff;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Khối chứa tiêu đề và các container */
+.code-group {
+    margin-bottom: 50px; /* Khoảng cách giữa các khối */
+}
+
+/* Hiệu ứng đổi màu chậm cho tiêu đề */
+.main-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    animation: slowColorChange 10s infinite; /* Hiệu ứng chuyển màu trong 10 giây và lặp lại */
+}
+
+/* Định nghĩa hiệu ứng đổi màu */
+@keyframes slowColorChange {
+    0% { color: #ff5722; } /* Màu cam */
+    25% { color: #4caf50; } /* Màu xanh lá */
+    50% { color: #2196f3; } /* Màu xanh dương */
+    75% { color: #9c27b0; } /* Màu tím */
+    100% { color: #ff5722; } /* Quay lại màu cam */
+}
+
+/* Container chứa các ô HTML, CSS, JS */
+.container {
+    display: flex;
+    justify-content: space-between; /* Các ô ngang hàng, cách đều nhau */
+    gap: 20px; /* Khoảng cách giữa các ô */
+    width: 100%;
+}
+
+/* Mỗi ô (HTML, CSS, JS) */
+.code-section {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 5px;
+    flex: 1; /* Các ô chiếm đều không gian */
+    display: flex;
+    flex-direction: column;
+    height: 400px; /* Chiều cao cố định */
+    overflow: hidden; /* Ẩn nội dung tràn */
+}
+
+/* Header (tiêu đề HTML, CSS, JS trong từng ô) */
+.header {
+    background-color: #1e1e1e;
+    padding: 10px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 16px;
+    color: #ffffff;
+    border-bottom: 1px solid #333; /* Viền dưới header */
+}
+
+.html-section .header {
+    color: #ff5f5f; /* Màu tiêu đề HTML */
+}
+
+.css-section .header {
+    color: #00bcd4; /* Màu tiêu đề CSS */
+}
+
+.js-section .header {
+    color: #f9d423; /* Màu tiêu đề JavaScript */
+}
+
+/* Textarea (nội dung ô nhập code) */
+textarea {
+    flex: 1; /* Chiếm toàn bộ không gian còn lại */
+    background-color: #1e1e1e;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    padding: 10px;
+    font-size: 14px;
+    resize: none; /* Không cho phép thay đổi kích thước */
+    overflow: auto; /* Thêm thanh cuộn nếu nội dung quá dài */
+}
+
+textarea::placeholder {
+    color: #777; /* Màu chữ placeholder */
+}
+
+/* Nút Copy và Download */
+.buttons {
+    display: flex;
+    gap: 10px; /* Khoảng cách giữa các nút */
+    padding: 10px;
+    justify-content: center; /* Canh giữa nút trong ô */
+}
+
+button {
+    padding: 8px 15px; /* Kích thước nút */
+    font-size: 14px;
+    color: white;
+    background-color: #555;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Hiệu ứng hover */
+}
+
+button:hover {
+    background-color: #777; /* Màu khi hover */
+}
+
+.line-numbers-container {
+    display: flex;
+    position: relative;
+    height: 100%;
+}
+
+.line-numbers {
+    width: 30px;
+    padding: 10px;
+    text-align: right;
+    background-color: #2d2d2d;
+    color: #777;
+    font-family: monospace;
+    font-size: 14px;
+    overflow: hidden;
+    user-select: none;
+}
+
+textarea {
+    flex: 1;
+    background-color: #1e1e1e;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    padding: 10px;
+    font-size: 14px;
+    resize: none;
+    overflow: auto;
+    font-family: monospace;
+}
+
+.line-numbers-container textarea {
+    margin-left: 0; /* Để khớp với số dòng */
+}
+
+.line-numbers-container {
+    display: flex;
+    flex-direction: row;
+}
+/* Footer styling */
+.footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #1e1e1e;
+    color: #ffffff;
+    font-size: 14px;
+    margin-top: 20px;
+    border-top: 1px solid #333;
+}
+
+/* Hiệu ứng fade-in và fade-out */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Popup */
+.popup {
+    display: none; /* Ẩn ban đầu */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 1s; /* Hiệu ứng xuất hiện */
+}
+
+.popup.fade-out {
+    animation: fadeOut 1s; /* Hiệu ứng biến mất */
+    opacity: 0;
+}
+
+.popup-content {
+    background-color: #ffffff;
+    color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 80%;
+    max-width: 400px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.popup-content h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.popup-content p {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.popup-gif {
+    width: 200px;
+    margin: 20px 0;
+}
+
+.popup-close-btn {
+    background-color: #333;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.popup-close-btn:hover {
+    background-color: #555;
+}
