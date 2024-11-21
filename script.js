@@ -139,6 +139,11 @@ async function loadContentFromJson() {
         document.getElementById('clb.html').value = data.html.clb;
         document.getElementById('css-clb').value = data.css.clb;
         document.getElementById('js-clb').value = data.javascript.clb;
+
+        // Gắn nội dung vào các <textarea> của "Định Dạng Văn Bản"
+        document.getElementById('dinh_dang.html').value = data.html.dinh_dang;
+        document.getElementById('css-dinhdang').value = data.css.dinh_dang;
+        document.getElementById('js-dinhdang').value = data.javascript.dinh_dang;
     } catch (error) {
         console.error('Lỗi khi tải dữ liệu JSON:', error);
     }
