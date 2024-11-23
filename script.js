@@ -151,10 +151,10 @@ async function loadContentFromJson() {
 
 function redirectToDemo(sectionId) {
     const demoLinks = {
-        'demo-clb': '/demo/clb.html', // Liên kết demo cho CLB.html
-        'demo-tkb': '/demo/tkb.html', // Liên kết demo tkb.html
-        'demo-thong_tin': '/demo/thong_tin.html', // Liên kết demo thong_tin.html
-        'demo-dinh_dang': '/demo/dinh_dang.html', // Liên kết demo dinh_dang.html
+        'demo-clb': '/share-code/demo/clb.html', // Liên kết demo cho CLB.html
+        'demo-tkb': '/share-code/demo/tkb.html', // Liên kết demo tkb.html
+        'demo-thong_tin': '/share-code/demo/thong_tin.html', // Liên kết demo thong_tin.html
+        'demo-dinh_dang': '/share-code/demo/dinh_dang.html', // Liên kết demo dinh_dang.html
     };
 
     const demoUrl = demoLinks[sectionId];
