@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thời Khóa Biểu - © 2024 Nguyễn Hoàng Nam</title>
+    <!-- Linking Google fonts for icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
+  </head>
+  <style>
+    /* Importing Google Fonts - Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  color: #000000;
+  background-size: cover; /* Để hình ảnh nền bao phủ toàn bộ màn hình */
+  padding: 20px;
+  transition: background 0.5s ease-in-out;
+  background: linear-gradient(#EEEEFF, #C8C7FF);
+}
+
+#chatbot-toggler {
+  position: fixed;
+  bottom: 127px;
+  right: 20px;
+  border: none;
+  height: 45px;
+  width: 45px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #5350C4;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+body.show-chatbot #chatbot-toggler {
+  transform: rotate(90deg);
+}
+
+#chatbot-toggler span {
+  color: #fff;
+  position: absolute;
+}
+
+#chatbot-toggler span:last-child,
+body.show-chatbot #chatbot-toggler span:first-child {
+  opacity: 0;
+}
+
+body.show-chatbot #chatbot-toggler span:last-child {
+  opacity: 1;
+}
+
+.chatbot-popup {
+  position: fixed;
+  right: 70px;
+  bottom: 90px;
+  width: 420px;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 15px;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.2);
+  transform-origin: bottom right;
+  box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1),
+    0 32px 64px -48px rgba(0, 0, 0, 0.5);
+  transition: all 0.1s ease;
+}
+
+body.show-chatbot .chatbot-popup {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  padding: 15px 22px;
+  background: #5350C4;
+  justify-content: space-between;
+}
+
+.chat-header .header-info {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.header-info .chatbot-logo {
+  width: 35px;
+  height: 35px;
+  padding: 6px;
+  fill: #5350C4;
+  flex-shrink: 0;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.header-info .logo-text {
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.31rem;
+  letter-spacing: 0.02rem;
+}
+
+.chat-header #close-chatbot {
+  border: none;
+  color: #fff;
+  height: 40px;
+  width: 40px;
+  font-size: 1.9rem;
+  margin-right: -10px;
+  padding-top: 2px;
+  cursor: pointer;
+  border-radius: 50%;
+  background: none;
+  transition: 0.2s ease;
+}
+
+.chat-header #close-chatbot:hover {
+  background: #3d39ac;
+}
+
+.chat-body {
+  padding: 25px 22px;
+  gap: 20px;
+  display: flex;
+  height: 460px;
+  overflow-y: auto;
+  margin-bottom: 82px;
+  flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: #ccccf5 transparent;
+}
+
+.chat-body,
+.chat-form .message-input:hover {
+  scrollbar-color: #ccccf5 transparent;
+}
+
+.chat-body .message {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+}
+
+.chat-body .message .bot-avatar {
+  width: 35px;
+  height: 35px;
+  padding: 6px;
+  fill: #fff;
+  flex-shrink: 0;
+  margin-bottom: 2px;
+  align-self: flex-end;
+  border-radius: 50%;
+  background: #5350C4;
+}
+
+.chat-body .message .message-text {
+  padding: 12px 16px;
+  max-width: 75%;
+  font-size: 0.95rem;
+}
+
+.chat-body .bot-message.thinking .message-text {
+  padding: 2px 16px;
+}
+
+.chat-body .bot-message .message-text {
+  background: #F2F2FF;
+  border-radius: 13px 13px 13px 3px;
+}
+
+.chat-body .user-message {
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.chat-body .user-message .message-text {
+  color: #fff;
+  background: #5350C4;
+  border-radius: 13px 13px 3px 13px;
+}
+
+.chat-body .user-message .attachment {
+  width: 50%;
+  margin-top: -7px;
+  border-radius: 13px 3px 13px 13px;
+}
+
+.chat-body .bot-message .thinking-indicator {
+  display: flex;
+  gap: 4px;
+  padding-block: 15px;
+}
+
+.chat-body .bot-message .thinking-indicator .dot {
+  height: 7px;
+  width: 7px;
+  opacity: 0.7;
+  border-radius: 50%;
+  background: #6F6BC2;
+  animation: dotPulse 1.8s ease-in-out infinite;
+}
+
+.chat-body .bot-message .thinking-indicator .dot:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.chat-body .bot-message .thinking-indicator .dot:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.chat-body .bot-message .thinking-indicator .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes dotPulse {
+
+  0%,
+  44% {
+    transform: translateY(0);
+  }
+
+  28% {
+    opacity: 0.4;
+    transform: translateY(-4px);
+  }
+
+  44% {
+    opacity: 0.2;
+  }
+}
+
+.chat-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: #fff;
+  padding: 15px 22px 20px;
+}
+
+.chat-footer .chat-form {
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: #fff;
+  border-radius: 32px;
+  outline: 1px solid #CCCCE5;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.06);
+  transition: 0s ease, border-radius 0s;
+}
+
+.chat-form:focus-within {
+  outline: 2px solid #5350C4;
+}
+
+.chat-form .message-input {
+  width: 100%;
+  height: 47px;
+  outline: none;
+  resize: none;
+  border: none;
+  max-height: 180px;
+  scrollbar-width: thin;
+  border-radius: inherit;
+  font-size: 0.95rem;
+  padding: 14px 0 12px 18px;
+  scrollbar-color: transparent transparent;
+}
+
+.chat-form .chat-controls {
+  gap: 3px;
+  height: 47px;
+  display: flex;
+  padding-right: 6px;
+  align-items: center;
+  align-self: flex-end;
+}
+
+.chat-form .chat-controls button {
+  height: 35px;
+  width: 35px;
+  border: none;
+  cursor: pointer;
+  color: #706DB0;
+  border-radius: 50%;
+  font-size: 1.15rem;
+  background: none;
+  transition: 0.2s ease;
+}
+
+.chat-form .chat-controls button:hover,
+body.show-emoji-picker .chat-controls #emoji-picker {
+  color: #3d39ac;
+  background: #f1f1ff;
+}
+
+.chat-form .chat-controls #send-message {
+  color: #fff;
+  display: none;
+  background: #5350C4;
+}
+
+.chat-form .chat-controls #send-message:hover {
+  background: #3d39ac;
+}
+
+.chat-form .message-input:valid~.chat-controls #send-message {
+  display: block;
+}
+
+.chat-form .file-upload-wrapper {
+  position: relative;
+  height: 35px;
+  width: 35px;
+}
+
+.chat-form .file-upload-wrapper :where(button, img) {
+  position: absolute;
+}
+
+.chat-form .file-upload-wrapper img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.chat-form .file-upload-wrapper #file-cancel {
+  color: #ff0000;
+  background: #fff;
+}
+
+.chat-form .file-upload-wrapper :where(img, #file-cancel),
+.chat-form .file-upload-wrapper.file-uploaded #file-upload {
+  display: none;
+}
+
+.chat-form .file-upload-wrapper.file-uploaded img,
+.chat-form .file-upload-wrapper.file-uploaded:hover #file-cancel {
+  display: block;
+}
+
+em-emoji-picker {
+  position: absolute;
+  left: 50%;
+  top: -337px;
+  width: 100%;
+  max-width: 350px;
+  visibility: hidden;
+  max-height: 330px;
+  transform: translateX(-50%);
+}
+
+body.show-emoji-picker em-emoji-picker {
+  visibility: visible;
+}
+
+/* Responsive media query for mobile screens */
+@media (max-width: 520px) {
+  #chatbot-toggler {
+    right: 20px;
+    bottom: 20px;
+  }
+
+  .chatbot-popup {
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    border-radius: 0;
+    width: 100%;
+  }
+
+  .chatbot-popup .chat-header {
+    padding: 12px 15px;
+  }
+
+  .chat-body {
+    height: calc(90% - 55px);
+    padding: 25px 15px;
+  }
+
+  .chat-footer {
+    padding: 10px 15px 15px;
+  }
+
+  .chat-form .file-upload-wrapper.file-uploaded #file-cancel {
+    opacity: 0;
+  }
+}
+
+/* Bố cục form và bảng */
+.form-container, .background-upload-container, #history-container {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-group label {
+  width: 150px;
+  font-weight: bold;
+}
+
+input, select {
+  flex: 1;
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+
+/* Style cho nút */
+button {
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: #3498db;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+  background-color: #2980b9;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  animation: bounce 0.3s;
+  @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+  }
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Bố cục tìm kiếm */
+.search-container {
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.search-container input {
+  width: 45%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.search-container input:focus {
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+}
+
+/* Highlight effect for updated rows */
+tr.updated {
+  background-color: #d1ffd1;
+  transition: background-color 1s ease-in-out;
+}
+
+/* Bảng */
+table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+  background-color: #f9f9f9;
+  color: #000000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: auto;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+table:hover {
+  transform: scale(1.01);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+table tr {
+  transition: all 0.3s ease-in-out;
+}
+
+th, td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #e0e0e0;
+  transition: background-color 0.3s ease;
+}
+
+th {
+  background-color: #1a1a1a; /* Nền tối hơn */
+  color: #ffffff; /* Chữ trắng */
+}
+td {
+  background-color: #f3f3f3; /* Nền sáng hơn */
+  color: #000000; /* Chữ đen */
+}
+
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:hover td {
+  background-color: #f1f1f1;
+}
+
+/* Modal xác nhận xóa - ban đầu bị ẩn */
+.modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+  text-align: center;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0;
+}
+
+/* Khi modal hiển thị */
+.modal.show {
+  display: block;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Các nút trong modal */
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.modal-buttons button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.modal-buttons button:hover {
+  background-color: #2980b9;
+}
+
+.modal-buttons .cancel-btn {
+  background-color: #f44336;
+}
+
+.modal-buttons .cancel-btn:hover {
+  background-color: #e74c3c;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-group {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+
+  .form-group label {
+      margin-bottom: 5px;
+  }
+
+  button {
+      width: 100%;
+      margin: 10px 0;
+  }
+
+  #guide-button {
+      width: 90%; /* Giảm kích thước nút trên màn hình nhỏ */
+  }
+}
+
+.form-group input, .form-group select {
+  font-size: 16px;
+  padding: 12px;
+}
+/* Center-align and adjust button size */
+.form-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.form-buttons button {
+  width: 150px;
+  margin: 0 10px;
+}
+
+/* Pop-up thông báo */
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  text-align: center;
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* Success and error styles for notifications */
+.popup.success {
+  background-color: #4caf50; /* Màu xanh lá sáng hơn */
+  color: #fff;
+}
+
+.popup.error {
+  background-color: #e53935; /* Màu đỏ sáng hơn */
+  color: #fff;
+}
+
+.popup button {
+  margin-top: 15px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #3498db;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.popup button:hover {
+  background-color: #2980b9;
+}
+
+/* Hiệu ứng chuyển màu cho tiêu đề "Thông tin hôm nay" */
+@keyframes colorChange {
+  0% { color: #ff5722; } /* Màu đầu tiên */
+  25% { color: #4caf50; } /* Màu thứ hai */
+  50% { color: #2196f3; } /* Màu thứ ba */
+  75% { color: #9c27b0; } /* Màu thứ tư */
+  100% { color: #ff5722; } /* Quay lại màu đầu tiên */
+}
+
+.popup-content h3 {
+  font-weight: bold; /* In đậm */
+  text-transform: uppercase; /* Viết hoa toàn bộ */
+  font-size: 20px; /* Kích thước chữ */
+  margin-top: 0;
+  animation: colorChange 5s infinite; /* Thực hiện hiệu ứng chuyển màu trong 5 giây và lặp lại */
+}
+
+/* Snowflakes animation */
+@-webkit-keyframes snowflakes-fall {
+  0% {top:-10%}
+  100% {top:100%}
+}
+@-webkit-keyframes snowflakes-shake {
+  0%,100% {-webkit-transform:translateX(0);transform:translateX(0)}
+  50% {-webkit-transform:translateX(80px);transform:translateX(80px)}
+}
+@keyframes snowflakes-fall {
+  0% {top:-10%}
+  100% {top:100%}
+}
+@keyframes snowflakes-shake {
+  0%,100%{ transform:translateX(0)}
+  50% {transform:translateX(80px)}
+}
+.snowflake {
+  color: #fff;
+  font-size: 1em;
+  font-family: Arial, sans-serif;
+  text-shadow: 0 0 5px #000;
+  position:fixed;
+  top:-10%;
+  z-index:9999;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+  cursor:default;
+  -webkit-animation-name:snowflakes-fall,snowflakes-shake;
+  -webkit-animation-duration:10s,3s;
+  -webkit-animation-timing-function:linear,ease-in-out;
+  -webkit-animation-iteration-count:infinite,infinite;
+  -webkit-animation-play-state:running,running;
+  animation-name:snowflakes-fall,snowflakes-shake;
+  animation-duration:10s,3s;
+  animation-timing-function:linear,ease-in-out;
+  animation-iteration-count:infinite,infinite;
+  animation-play-state:running,running;
+  animation: snowflakes-fall 10s linear infinite, snowflakes-shake 3s ease-in-out infinite, spin 8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.snowflake:nth-of-type(0){
+  left:1%;-webkit-animation-delay:0s,0s;animation-delay:0s,0s
+}
+.snowflake:nth-of-type(1){
+  left:10%;-webkit-animation-delay:1s,1s;animation-delay:1s,1s
+}
+.snowflake:nth-of-type(2){
+  left:20%;-webkit-animation-delay:6s,.5s;animation-delay:6s,.5s
+}
+.snowflake:nth-of-type(3){
+  left:30%;-webkit-animation-delay:4s,2s;animation-delay:4s,2s
+}
+.snowflake:nth-of-type(4){
+  left:40%;-webkit-animation-delay:2s,2s;animation-delay:2s,2s
+}
+.snowflake:nth-of-type(5){
+  left:50%;-webkit-animation-delay:8s,3s;animation-delay:8s,3s
+}
+.snowflake:nth-of-type(6){
+  left:60%;-webkit-animation-delay:6s,2s;animation-delay:6s,2s
+}
+.snowflake:nth-of-type(7){
+  left:70%;-webkit-animation-delay:2.5s,1s;animation-delay:2.5s,1s
+}
+.snowflake:nth-of-type(8){
+  left:80%;-webkit-animation-delay:1s,0s;animation-delay:1s,0s
+}
+.snowflake:nth-of-type(9){
+  left:90%;-webkit-animation-delay:3s,1.5s;animation-delay:3s,1.5s
+}
+.snowflake:nth-of-type(10){
+  left:25%;-webkit-animation-delay:2s,0s;animation-delay:2s,0s
+}
+.snowflake:nth-of-type(11){
+  left:65%;-webkit-animation-delay:4s,2.5s;animation-delay:4s,2.5s
+}
+
+/* Phần liên hệ lơ lửng ở góc phải dưới */
+#contact-floating {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Tăng khoảng cách giữa các biểu tượng liên hệ */
+  z-index: 1000;
+}
+
+#contact-floating a {
+  text-decoration: none;
+  display: block;
+  width: 40px;
+  height: 40px;
+}
+
+#contact-floating img {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease;
+}
+
+#contact-floating img:hover {
+  transform: scale(1.1);
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* Khoảng cách giữa các nút */
+  margin-top: 20px;
+}
+
+.form-buttons button {
+  width: 150px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: none;
+  background-color: #3498db;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.form-buttons button:hover {
+  background-color: #2980b9;
+}
+
+.form-buttons button:active {
+  transform: scale(0.98);
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.item {
+  flex: 1 1 45%;
+  margin: 10px;
+}
+
+@media (max-width: 768px) {
+  .form-group {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+
+  .search-container {
+      flex-direction: column;
+      width: 100%;
+  }
+
+  .form-buttons button {
+      width: 100%;
+      margin-bottom: 10px;
+  }
+
+  #contact-floating {
+      bottom: 60px; /* Điều chỉnh vị trí để dễ tiếp cận hơn */
+  }
+}
+
+
+table tr:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.tooltip {
+  position: relative;
+}
+
+.tooltip-text {
+  display: none;
+  position: absolute;
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.tooltip:hover .tooltip-text {
+  display: block;
+}
+
+table th {
+  background-color: #2c3e50;
+  color: white;
+}
+
+#scroll-to-top {
+  position: fixed;
+  bottom: 190px; /* Tăng khoảng cách từ dưới lên, hiện tại là 80px */
+  right: 20px; /* Khoảng cách từ phải sang */
+  height: 45px;
+  width: 45px;
+  display: none;
+  padding: 10px 15px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+  z-index: 5000;
+}
+
+#scroll-to-top:hover {
+  background-color: #2980b9;
+}
+
+/* Dải màu xám cho phần thời gian và marquee */
+.header-strip {
+  background-color: #2c3e50; /* Màu xám nhạt */
+  padding: 10px;
+  border-radius: 8px; /* Bo góc mềm mại */
+  display: flex;
+  justify-content: space-between; /* Đặt các thành phần ở hai bên */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  margin-bottom: 20px; /* Khoảng cách phía dưới */
+  position: relative; /* Định vị dải màu xám */
+  overflow: hidden; /* Ẩn phần nội dung vượt ra ngoài */
+}
+
+.center-time {
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.led-marquee {
+  font-size: 16px;
+  font-weight: bold;
+  white-space: nowrap; /* Giữ văn bản trên cùng một dòng */
+  margin-left: auto; /* Đẩy văn bản sát rìa bên phải */
+  opacity: 0; /* Ban đầu ẩn */
+  animation: fade-blink 5s ease-in-out infinite; /* Áp dụng hiệu ứng hiển thị, nhấp nháy và lặp lại */
+}
+
+/* Hiệu ứng hiển thị dần lên, nhấp nháy, đổi màu, và biến mất */
+@keyframes fade-blink {
+  0% {
+      opacity: 0; /* Bắt đầu với độ mờ hoàn toàn */
+      color: #3498db; /* Màu ban đầu khi ẩn */
+  }
+  20% {
+      opacity: 1; /* Hiển thị rõ */
+      color: #e74c3c; /* Đổi màu sang đỏ khi hiện */
+  }
+  40% {
+      opacity: 0; /* Biến mất để tạo hiệu ứng nhấp nháy */
+      color: #f1c40f; /* Đổi màu sang vàng trong lúc nhấp nháy */
+  }
+  60% {
+      opacity: 1; /* Hiển thị rõ lại */
+      color: #2ecc71; /* Đổi màu sang xanh khi hiển thị lại */
+  }
+  80% {
+      opacity: 0; /* Lại biến mất để tạo thêm hiệu ứng nhấp nháy */
+      color: #9b59b6; /* Đổi màu sang tím trong lúc nhấp nháy */
+  }
+  100% {
+      opacity: 1; /* Kết thúc với việc hiển thị lại */
+      color: #3498db; /* Đổi lại màu xanh dương khi kết thúc */
+  }
+}
+
+/* Dải hiển thị Lịch học hôm nay */
+.schedule-strip {
+  background-color: #373737; /* Màu nền nhạt */
+  padding: 15px;
+  border-radius: 8px; /* Bo góc mềm mại */
+  margin-top: 20px; /* Khoảng cách phía trên */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
+  text-align: center; /* Căn giữa văn bản */
+}
+
+.schedule-strip h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #ffffff;
+}
+
+.schedule-strip #schedule-details {
+  font-weight: bold;
+  color: #2ecc71; /* Màu xanh lá cho lịch học nếu có */
+}
+
+#schedule-body tr {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+#schedule-body tr.visible {
+  opacity: 1;
+}
+
+/* Hiệu ứng mượt mà cho pop-up */
+.floating-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%); /* Dịch chuyển lên một chút khi chưa hiển thị */
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; /* Chuyển tiếp cho hiệu ứng mờ và dịch chuyển */
+  display: none;
+}
+
+/* Hiệu ứng hiển thị */
+.floating-popup.show {
+  display: block;
+  opacity: 1;
+  transform: translate(-50%, -50%); /* Hiển thị ở giữa màn hình */
+}
+
+/* Hiệu ứng ẩn */
+.floating-popup.hide {
+  opacity: 0;
+  transform: translate(-50%, -60%); /* Dịch chuyển lên một chút khi ẩn */
+}
+
+#today-schedule-gif {
+  display: block;
+  margin: 20px auto; /* Căn giữa theo chiều ngang */
+  max-width: 100%; /* Đảm bảo ảnh không vượt quá kích thước của phần tử cha */
+}
+
+#weather {
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: bold;
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+}
+#weather img {
+  margin-right: 5px;
+}
+
+.fade-in {
+  animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* Dark mode styles */
+body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+.dark-mode .form-container, .dark-mode .header-strip, .dark-mode .schedule-strip {
+  background-color: #333;
+}
+
+.dark-mode table, .dark-mode th, .dark-mode td {
+  background-color: #444;
+  color: #e0e0e0;
+}
+
+/* Kiểu chữ cho Chế độ tối/sáng */
+#dark-mode-label {
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: bold;
+  margin-left: 10px;
+  vertical-align: middle; /* Giúp căn giữa theo chiều dọc với nút */
+  transition: color 0.3s ease;
+}
+
+/* Kiểu cho biểu tượng */
+#mode-icon {
+  margin-right: 5px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Đổi màu chữ khi ở chế độ nền tối */
+body.dark-mode #dark-mode-label {
+  color: #e0e0e0;
+}
+
+body.dark-mode #mode-icon {
+  color: #f0e68c; /* Màu vàng nhạt cho biểu tượng mặt trăng */
+}
+
+/* Kiểu cho các ô lọc nâng cao */
+.filter-container select, .filter-container input {
+  margin-right: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Kiểu cho hộp gợi ý */
+.suggestion-box {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  position: absolute;
+  z-index: 1000;
+  width: 300px;
+  display: none;
+}
+
+.suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background-color: #f0f0f0;
+}
+  </style>
+  <body onload="initPage(); showInfoPopup();" style="background: url('assets/images/background.jpg') no-repeat center center fixed; background-size: cover;" loading="lazy">
+    <div class="floating-popup" id="info-popup">
+      <div class="popup-content">
+          <h3>THÔNG TIN HÔM NAY</h3>
+          <p id="current-day">Hôm nay là: Đang tải...</p>
+          <p id="holiday-info">Ngày lễ: Đang tải...</p>
+          <p id="today-schedule-info">Lịch học hôm nay: Đang tải...</p>
+          <!-- Thêm ảnh GIF bên dưới thông tin lịch học -->
+          <img id="today-schedule-gif" src="" alt="Lịch học hôm nay" style="max-width: 100%; margin-top: 10px; display: none;">
+          <button onclick="closeInfoPopup()">Đóng</button>
+      </div>
+  </div>
+      <!-- Phần liên hệ lơ lửng -->
+  <div id="contact-floating">
+      <a href="https://www.facebook.com/imissher1405" target="_blank" id="contact-facebook" title="Liên hệ qua Facebook">
+          <img src="assets/images/facebook.png" alt="Facebook" style="width: 40px; height: 40px;">
+      </a>
+      <a href="tel:0369116099" id="contact-phone" title="Liên hệ qua điện thoại">
+          <img src="assets/images/phone.png" alt="Phone" style="width: 40px; height: 40px;">
+      </a>
+  </div>
+      <!--Modal tuyết rơi-->
+      <div class="snowflakes" aria-hidden="true">
+          <div class="snowflake">🌸</div>
+          <div class="snowflake">❆</div>
+          <div class="snowflake">🌸</div>
+          <div class="snowflake">❆</div>
+          <div class="snowflake">🌸</div>
+          <div class="snowflake">❆</div>
+        </div>
+      <!-- Modal xác nhận xóa -->
+      <div class="modal" id="confirm-modal">
+          <p>Bạn có chắc chắn muốn xóa?</p>
+          <div class="modal-buttons">
+              <button class="ok-btn" onclick="confirmDelete()">OK</button>
+              <button class="cancel-btn" onclick="cancelDelete()">Hủy</button>
+          </div>
+      </div>
+      <!-- Thanh tìm kiếm -->
+      <div class="search-container">
+          <input type="text" id="search-subject" placeholder="Tìm kiếm theo môn học..." oninput="searchTable('subject')">
+          <input type="text" id="search-teacher" placeholder="Tìm kiếm theo giáo viên..." oninput="searchTable('teacher')">
+      </div>
+      <!-- Bộ lọc nâng cao cho tìm kiếm -->
+  <div class="filter-container" style="margin-top: 20px;">
+      <select id="filter-day">
+          <option value="">Chọn ngày</option>
+          <option value="monday">Thứ 2</option>
+          <option value="tuesday">Thứ 3</option>
+          <option value="wednesday">Thứ 4</option>
+          <option value="thursday">Thứ 5</option>
+          <option value="friday">Thứ 6</option>
+          <option value="saturday">Thứ 7</option>
+          <option value="sunday">Chủ Nhật</option>
+      </select>
+      <select id="filter-type">
+          <option value="">Loại môn học</option>
+          <option value="lý thuyết">Lý thuyết</option>
+          <option value="thực hành">Thực hành</option>
+      </select>
+      <input type="text" id="filter-teacher" placeholder="Giáo viên">
+      <input type="time" id="filter-time-start">
+      <input type="time" id="filter-time-end">
+      <button onclick="applyAdvancedFilter()">Lọc</button>
+  </div>
+  
+  <!-- Ô tìm kiếm có gợi ý từ khóa -->
+  <div class="search-container" style="margin-top: 20px;">
+      <input type="text" id="search-input" placeholder="Tìm kiếm theo từ khóa..." oninput="showSuggestions()">
+      <div id="suggestions" class="suggestion-box"></div>
+  </div>
+  <button id="scroll-to-top" onclick="scrollToTop()">↑</button>
+      <!-- Bảng lịch hoạt động -->
+      <h1 id="schedule-name" style="text-align: center; font-size: 2em; font-weight: bold; color: #ffffff;">
+          Thời Khóa Biểu
+      </h1>
+  <!-- Dải chứa thời gian và marquee -->
+  <div class="header-strip">
+      <div id="date-time" class="center-time"></div>
+      <div id="weather" class="center-time">Đang tải thời tiết...</div>
+      <div id="led-marquee" class="led-marquee">Trang Web Thời Khóa Biểu Copyright© Nguyễn Hoàng Nam</div>
+  </div>
+  <!-- Nút chuyển đổi chế độ nền tối với chữ bên cạnh -->
+  <div style="text-align: right; padding: 10px;">
+      <label class="switch">
+          <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()">
+          <span class="slider round"></span>
+      </label>
+      <span id="dark-mode-label">
+          <i id="mode-icon" class="fas fa-sun"></i> <!-- Biểu tượng mặt trời -->
+          Chế độ sáng
+      </span>
+  </div>
+  <div class="schedule-strip">
+      <h3 id="today-schedule">Lịch học hôm nay: <span id="schedule-details">Đang tải...</span></h3>
+  </div>
+  <!-- Hộp chat trợ lý ảo -->
+      <table id="schedule-table">
+          <thead>
+              <tr>
+                  <th>Bộ môn</th>
+                  <th>GV phụ trách</th>
+                  <th>Thời gian học</th>
+                  <th>Thứ 2</th>
+                  <th>Thứ 3</th>
+                  <th>Thứ 4</th>
+                  <th>Thứ 5</th>
+                  <th>Thứ 6</th>
+                  <th>Thứ 7</th>
+                  <th>Chủ Nhật</th>
+                  <th>Xóa</th>
+                  <th>Chỉnh sửa</th>
+              </tr>
+          </thead>
+          <tbody id="schedule-body">
+              <!-- Các dòng dữ liệu thời khóa biểu sẽ được thêm vào đây -->
+          </tbody>
+      </table>
+  
+      <!-- Form cập nhật lịch -->
+      <div class="form-container">
+          <h3>Cập nhật Thời khóa biểu</h3>
+          <div class="form-group">
+              <label for="subject">Bộ môn:</label>
+              <input type="text" id="subject" placeholder="Nhập tên bộ môn">
+          </div>
+          <div class="form-group">
+              <label for="teacher">GV phụ trách:</label>
+              <input type="text" id="teacher" placeholder="Nhập tên giáo viên">
+          </div>
+          <div class="form-group">
+              <label for="time">Thời gian học:</label>
+              <input type="time" id="start-time"> đến 
+              <input type="time" id="end-time">
+          </div>
+          <div class="form-group">
+              <label for="monday">Thứ 2:</label>
+              <input type="checkbox" id="monday">
+          </div>
+          <div class="form-group">
+              <label for="tuesday">Thứ 3:</label>
+              <input type="checkbox" id="tuesday">
+          </div>
+          <div class="form-group">
+              <label for="wednesday">Thứ 4:</label>
+              <input type="checkbox" id="wednesday">
+          </div>
+          <div class="form-group">
+              <label for="thursday">Thứ 5:</label>
+              <input type="checkbox" id="thursday">
+          </div>
+          <div class="form-group">
+              <label for="friday">Thứ 6:</label>
+              <input type="checkbox" id="friday">
+          </div>
+          <div class="form-group">
+              <label for="saturday">Thứ 7:</label>
+              <input type="checkbox" id="saturday">
+          </div>
+          <div class="form-group">
+              <label for="sunday">Chủ nhật:</label>
+              <input type="checkbox" id="sunday">
+          </div>
+          <!-- Tùy chọn xuất dữ liệu -->
+  <div class="export-options">
+      <h3>Tùy chọn xuất dữ liệu</h3>
+      <select id="export-filter-type">
+          <option value="">Chọn loại lọc</option>
+          <option value="day">Theo ngày</option>
+          <option value="subject">Theo môn học</option>
+          <option value="teacher">Theo giáo viên</option>
+      </select>
+      <input type="text" id="export-filter-value" placeholder="Nhập giá trị lọc...">
+  
+      <!-- Các nút thao tác -->
+      <div class="form-buttons">
+          <button type="button" onclick="if(validateForm()) { validateAndUpdateSchedule(); }">Cập nhật</button>
+          <button type="button" onclick="exportToCSV()">Xuất CSV</button>
+          <button type="button" onclick="exportToPDF()">Xuất PDF</button>
+          <button type="button" onclick="exportData('excel')">Xuất Excel</button>
+          <button type="button" onclick="exportData('json')">Xuất JSON</button>
+          <button type="button" onclick="exportData('xml')">Xuất XML</button>
+      </div>
+  </div>
+    <!-- Chatbot Toggler -->
+    <button id="chatbot-toggler">
+      <span class="material-symbols-rounded">mode_comment</span>
+      <span class="material-symbols-rounded">close</span>
+    </button>
+
+    <div class="chatbot-popup">
+      <!-- Chatbot Header -->
+      <div class="chat-header">
+        <div class="header-info">
+          <svg class="chatbot-logo" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 1024 1024">
+            <path
+              d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9zM351.7 448.2c0-29.5 23.9-53.5 53.5-53.5s53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5-53.5-23.9-53.5-53.5zm157.9 267.1c-67.8 0-123.8-47.5-132.3-109h264.6c-8.6 61.5-64.5 109-132.3 109zm110-213.7c-29.5 0-53.5-23.9-53.5-53.5s23.9-53.5 53.5-53.5 53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5zM867.2 644.5V453.1h26.5c19.4 0 35.1 15.7 35.1 35.1v121.1c0 19.4-15.7 35.1-35.1 35.1h-26.5zM95.2 609.4V488.2c0-19.4 15.7-35.1 35.1-35.1h26.5v191.3h-26.5c-19.4 0-35.1-15.7-35.1-35.1zM561.5 149.6c0 23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9-26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z"
+            />
+          </svg>
+          <h2 class="logo-text">Lumi AI</h2>
+        </div>
+        <button id="close-chatbot" class="material-symbols-rounded">keyboard_arrow_down</button>
+      </div>
+
+      <!-- Chatbot Body -->
+      <div class="chat-body">
+        <div class="message bot-message">
+          <svg class="bot-avatar" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 1024 1024">
+            <path
+              d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9zM351.7 448.2c0-29.5 23.9-53.5 53.5-53.5s53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5-53.5-23.9-53.5-53.5zm157.9 267.1c-67.8 0-123.8-47.5-132.3-109h264.6c-8.6 61.5-64.5 109-132.3 109zm110-213.7c-29.5 0-53.5-23.9-53.5-53.5s23.9-53.5 53.5-53.5 53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5zM867.2 644.5V453.1h26.5c19.4 0 35.1 15.7 35.1 35.1v121.1c0 19.4-15.7 35.1-35.1 35.1h-26.5zM95.2 609.4V488.2c0-19.4 15.7-35.1 35.1-35.1h26.5v191.3h-26.5c-19.4 0-35.1-15.7-35.1-35.1zM561.5 149.6c0 23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9-26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z"
+            />
+          </svg>
+          <!-- prettier-ignore -->
+          <div class="message-text"> Chào bạn! <br /> Lumi AI có thể giúp gì cho bạn? </div>
+        </div>
+      </div>
+
+      <!-- Chatbot Footer -->
+      <div class="chat-footer">
+        <form action="#" class="chat-form">
+          <textarea placeholder="Message..." class="message-input" required></textarea>
+          <div class="chat-controls">
+            <button type="button" id="emoji-picker" class="material-symbols-outlined">sentiment_satisfied</button>
+            <div class="file-upload-wrapper">
+              <input type="file" accept="image/*" id="file-input" hidden />
+              <img src="#" />
+              <button type="button" id="file-upload" class="material-symbols-rounded">attach_file</button>
+              <button type="button" id="file-cancel" class="material-symbols-rounded">close</button>
+            </div>
+            <button type="submit" id="send-message" class="material-symbols-rounded">arrow_upward</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <footer style="text-align: center; margin-top: 20px; font-size: 14px; color: #777;">
+      © 2024 Nguyễn Hoàng Nam. All rights reserved.
+  </footer>
+    <!-- Linking Emoji Mart script for emoji picker -->
+    <script src="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js"></script>
+
+    <!-- Linking custom script -->
+    <script>
+        const chatBody = document.querySelector(".chat-body");
+const messageInput = document.querySelector(".message-input");
+const sendMessage = document.querySelector("#send-message");
+const fileInput = document.querySelector("#file-input");
+const fileUploadWrapper = document.querySelector(".file-upload-wrapper");
+const fileCancelButton = fileUploadWrapper.querySelector("#file-cancel");
+const chatbotToggler = document.querySelector("#chatbot-toggler");
+const closeChatbot = document.querySelector("#close-chatbot");
+
+// API setup
+const API_KEY = "AIzaSyAgmyP-xmFxDj87kk0kYoD4xhKSLcMSQhE";
+const API_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=${API_KEY}`;
+
+// Initialize user message and file data
+const userData = {
+  message: null,
+  file: {
+    data: null,
+    mime_type: null,
+  },
+};
+
+// Store chat history
+const chatHistory = [];
+const initialInputHeight = messageInput.scrollHeight;
+
+// Create message element with dynamic classes and return it
+const createMessageElement = (content, ...classes) => {
+  const div = document.createElement("div");
+  div.classList.add("message", ...classes);
+  div.innerHTML = content;
+  return div;
+};
+
+// Generate bot response using API
+const generateBotResponse = async (incomingMessageDiv) => {
+  const messageElement = incomingMessageDiv.querySelector(".message-text");
+
+  // Add user message to chat history
+  chatHistory.push({
+    role: "user",
+    parts: [{ text: userData.message }, ...(userData.file.data ? [{ inline_data: userData.file }] : [])],
+  });
+
+  // API request options
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: chatHistory,
+    }),
+  };
+
+  try {
+    // Fetch bot response from API
+    const response = await fetch(API_URL, requestOptions);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error.message);
+
+    // Extract and display bot's response text
+    const apiResponseText = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1").trim();
+    messageElement.innerText = apiResponseText;
+
+    // Add bot response to chat history
+    chatHistory.push({
+      role: "model",
+      parts: [{ text: apiResponseText }],
+    });
+  } catch (error) {
+    // Handle error in API response
+    console.log(error);
+    messageElement.innerText = error.message;
+    messageElement.style.color = "#ff0000";
+  } finally {
+    // Reset user's file data, removing thinking indicator and scroll chat to bottom
+    userData.file = {};
+    incomingMessageDiv.classList.remove("thinking");
+    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
+  }
+};
+
+// Handle outgoing user messages
+const handleOutgoingMessage = (e) => {
+  e.preventDefault();
+  userData.message = messageInput.value.trim();
+  messageInput.value = "";
+  messageInput.dispatchEvent(new Event("input"));
+  fileUploadWrapper.classList.remove("file-uploaded");
+
+  // Create and display user message
+  const messageContent = `<div class="message-text"></div>
+                          ${userData.file.data ? `<img src="data:${userData.file.mime_type};base64,${userData.file.data}" class="attachment" />` : ""}`;
+
+  const outgoingMessageDiv = createMessageElement(messageContent, "user-message");
+  outgoingMessageDiv.querySelector(".message-text").innerText = userData.message;
+  chatBody.appendChild(outgoingMessageDiv);
+  chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
+
+  // Simulate bot response with thinking indicator after a delay
+  setTimeout(() => {
+    const messageContent = `<svg class="bot-avatar" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 1024 1024">
+            <path
+              d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9zM351.7 448.2c0-29.5 23.9-53.5 53.5-53.5s53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5-53.5-23.9-53.5-53.5zm157.9 267.1c-67.8 0-123.8-47.5-132.3-109h264.6c-8.6 61.5-64.5 109-132.3 109zm110-213.7c-29.5 0-53.5-23.9-53.5-53.5s23.9-53.5 53.5-53.5 53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5zM867.2 644.5V453.1h26.5c19.4 0 35.1 15.7 35.1 35.1v121.1c0 19.4-15.7 35.1-35.1 35.1h-26.5zM95.2 609.4V488.2c0-19.4 15.7-35.1 35.1-35.1h26.5v191.3h-26.5c-19.4 0-35.1-15.7-35.1-35.1zM561.5 149.6c0 23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9-26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z"/></svg>
+          <div class="message-text">
+            <div class="thinking-indicator">
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>
+          </div>`;
+
+    const incomingMessageDiv = createMessageElement(messageContent, "bot-message", "thinking");
+    chatBody.appendChild(incomingMessageDiv);
+    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
+    generateBotResponse(incomingMessageDiv);
+  }, 600);
+};
+
+// Adjust input field height dynamically
+messageInput.addEventListener("input", () => {
+  messageInput.style.height = `${initialInputHeight}px`;
+  messageInput.style.height = `${messageInput.scrollHeight}px`;
+  document.querySelector(".chat-form").style.borderRadius = messageInput.scrollHeight > initialInputHeight ? "15px" : "32px";
+});
+
+// Handle Enter key press for sending messages
+messageInput.addEventListener("keydown", (e) => {
+  const userMessage = e.target.value.trim();
+  if (e.key === "Enter" && !e.shiftKey && userMessage && window.innerWidth > 768) {
+    handleOutgoingMessage(e);
+  }
+});
+
+// Handle file input change and preview the selected file
+fileInput.addEventListener("change", () => {
+  const file = fileInput.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    fileInput.value = "";
+    fileUploadWrapper.querySelector("img").src = e.target.result;
+    fileUploadWrapper.classList.add("file-uploaded");
+    const base64String = e.target.result.split(",")[1];
+
+    // Store file data in userData
+    userData.file = {
+      data: base64String,
+      mime_type: file.type,
+    };
+  };
+
+  reader.readAsDataURL(file);
+});
+
+// Cancel file upload
+fileCancelButton.addEventListener("click", () => {
+  userData.file = {};
+  fileUploadWrapper.classList.remove("file-uploaded");
+});
+
+// Initialize emoji picker and handle emoji selection
+const picker = new EmojiMart.Picker({
+  theme: "light",
+  skinTonePosition: "none",
+  previewPosition: "none",
+  onEmojiSelect: (emoji) => {
+    const { selectionStart: start, selectionEnd: end } = messageInput;
+    messageInput.setRangeText(emoji.native, start, end, "end");
+    messageInput.focus();
+  },
+  onClickOutside: (e) => {
+    if (e.target.id === "emoji-picker") {
+      document.body.classList.toggle("show-emoji-picker");
+    } else {
+      document.body.classList.remove("show-emoji-picker");
+    }
+  },
+});
+
+document.querySelector(".chat-form").appendChild(picker);
+
+sendMessage.addEventListener("click", (e) => handleOutgoingMessage(e));
+document.querySelector("#file-upload").addEventListener("click", () => fileInput.click());
+closeChatbot.addEventListener("click", () => document.body.classList.remove("show-chatbot"));
+chatbotToggler.addEventListener("click", () => document.body.classList.toggle("show-chatbot"));
+
+let itemBeingEdited = null;
+
+function initPage() {
+    displayCurrentDateTime();
+    setupScrollToTopButton();
+    setupSnowflakes();
+    loadScheduleFromLocalStorage();
+    updateTodaySchedule()
+}
+
+function displayCurrentDateTime() {
+    const dateTimeElement = document.getElementById("date-time");
+    setInterval((() => {
+        const now = new Date;
+        const timeString = now.toLocaleTimeString("vi-VN");
+        const dateString = now.toLocaleDateString("vi-VN");
+        dateTimeElement.innerHTML = `<i class="fas fa-clock"></i> ${timeString} | <i class="fas fa-calendar-alt"></i> ${dateString}`
+    }), 1e3)
+}
+
+function setupScrollToTopButton() {
+    const scrollToTopButton = document.getElementById("scroll-to-top");
+    window.addEventListener("scroll", (() => {
+        scrollToTopButton.style.display = window.scrollY > 200 ? "block" : "none"
+    }))
+}
+
+function scrollToTop(duration) {
+    const startPosition = window.pageYOffset;
+    const startTime = performance.now();
+
+    function animationScroll(currentTime) {
+        const timeElapsed = currentTime - startTime;
+        const run = ease(timeElapsed, startPosition, -startPosition, duration);
+        window.scrollTo(0, run);
+        if (timeElapsed < duration) {
+            requestAnimationFrame(animationScroll)
+        }
+    }
+
+    function ease(t, b, c, d) {
+        t /= d / 2;
+        if (t < 1) return c / 2 * t * t + b;
+        t--;
+        return -c / 2 * (t * (t - 2) - 1) + b
+    }
+    requestAnimationFrame(animationScroll)
+}
+document.getElementById("scroll-to-top").addEventListener("click", (function() {
+    scrollToTop(1500)
+}));
+let itemToDelete = null;
+
+function confirmDelete() {
+    if (itemToDelete) {
+        itemToDelete.style.transition = "opacity 0.5s";
+        itemToDelete.style.opacity = "0";
+        setTimeout((() => {
+            itemToDelete.remove();
+            saveScheduleToLocalStorage();
+            showNotification("Xóa thành công!", "success");
+            itemToDelete = null;
+            closeModal()
+        }), 500)
+    }
+}
+
+function openDeleteModal(item) {
+    itemToDelete = item;
+    document.getElementById("confirm-modal").classList.add("show")
+}
+
+function closeModal() {
+    document.getElementById("confirm-modal").classList.remove("show")
+}
+
+function cancelDelete() {
+    itemToDelete = null;
+    closeModal()
+}
+
+function validateForm() {
+    const subject = document.getElementById("subject").value.trim();
+    const teacher = document.getElementById("teacher").value.trim();
+    const startTime = document.getElementById("start-time").value;
+    const endTime = document.getElementById("end-time").value;
+    if (!subject || !teacher) {
+        showNotification("Hãy điền đầy đủ thông tin cho bộ môn và giáo viên.", "error");
+        return false
+    }
+    if (startTime >= endTime) {
+        showNotification("Giờ bắt đầu phải trước giờ kết thúc.", "error");
+        return false
+    }
+    return true
+}
+
+function validateAndUpdateSchedule() {
+    if (!validateForm()) return;
+    const subject = document.getElementById("subject").value;
+    const teacher = document.getElementById("teacher").value;
+    const startTime = document.getElementById("start-time").value;
+    const endTime = document.getElementById("end-time").value;
+    const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+    const daysChecked = days.map((day => document.getElementById(day).checked ? "✔" : ""));
+    let scheduleRow;
+    if (itemBeingEdited) {
+        scheduleRow = itemBeingEdited;
+        scheduleRow.style.transition = "background-color 0.5s";
+        scheduleRow.style.backgroundColor = "#d1ffd1"
+    } else {
+        scheduleRow = document.createElement("tr");
+        scheduleRow.style.opacity = "0";
+        scheduleRow.innerHTML = `\n            <td>${subject}</td>\n            <td>${teacher}</td>\n            <td>${startTime} - ${endTime}</td>\n            ${daysChecked.map((day=>`<td>${day}</td>`)).join("")}\n            <td><button onclick="openDeleteModal(this.parentElement.parentElement)">Xóa</button></td>\n            <td><button onclick="editSchedule(this.parentElement.parentElement)">Chỉnh sửa</button></td>\n        `;
+        document.getElementById("schedule-body").appendChild(scheduleRow);
+        setTimeout((() => {
+            scheduleRow.style.transition = "opacity 0.5s";
+            scheduleRow.style.opacity = "1"
+        }), 0)
+    }
+    saveScheduleToLocalStorage();
+    clearForm();
+    showNotification("Cập nhật thành công!", "success");
+    itemBeingEdited = null
+}
+
+function clearForm() {
+    document.getElementById("subject").value = "";
+    document.getElementById("teacher").value = "";
+    document.getElementById("start-time").value = "";
+    document.getElementById("end-time").value = "";
+    ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"].forEach((day => {
+        document.getElementById(day).checked = false
+    }));
+    itemBeingEdited = null
+}
+
+function saveScheduleToLocalStorage() {
+    const scheduleData = Array.from(document.querySelectorAll("#schedule-body tr")).map((row => {
+        const cells = row.children;
+        return {
+            subject: cells[0].textContent,
+            teacher: cells[1].textContent,
+            time: cells[2].textContent,
+            days: Array.from(cells).slice(3, 10).map((cell => cell.textContent === "✔"))
+        }
+    }));
+    localStorage.setItem("scheduleData", JSON.stringify(scheduleData))
+}
+
+function getTodaySchedule() {
+    const scheduleData = JSON.parse(localStorage.getItem("scheduleData")) || [];
+    const today = (new Date).getDay();
+    const todaySchedule = scheduleData.filter((data => data.days[today - 1] === true));
+    if (todaySchedule.length === 0) {
+        return "Không có lịch học nào hôm nay."
+    }
+    return todaySchedule.map((data => `* ${data.subject} (${data.time}) - Giáo viên: ${data.teacher}`)).join("<br/>")
+}
+
+function updateTodaySchedule() {
+    const scheduleDetails = document.getElementById("schedule-details");
+    const todaySchedule = getTodaySchedule();
+    if (todaySchedule === "Không có lịch học nào hôm nay.") {
+        scheduleDetails.innerHTML = todaySchedule
+    } else {
+        scheduleDetails.innerHTML = todaySchedule;
+        scheduleDetails.style.display = "block"
+    }
+}
+
+function loadScheduleFromLocalStorage() {
+    const scheduleData = JSON.parse(localStorage.getItem("scheduleData")) || [];
+    const scheduleBody = document.getElementById("schedule-body");
+    scheduleBody.innerHTML = "";
+    scheduleData.forEach((data => {
+        const scheduleRow = document.createElement("tr");
+        scheduleRow.innerHTML = `\n            <td>${data.subject}</td>\n            <td>${data.teacher}</td>\n            <td>${data.time}</td>\n            ${data.days.map((day=>`<td>${day?"✔":""}</td>`)).join("")}\n            <td><button onclick="openDeleteModal(this.parentElement.parentElement)">Xóa</button></td>\n            <td><button onclick="editSchedule(this.parentElement.parentElement)">Chỉnh sửa</button></td>\n        `;
+        scheduleBody.appendChild(scheduleRow)
+    }));
+    updateTodaySchedule()
+}
+
+function editSchedule(row) {
+    const cells = row.children;
+    document.getElementById("subject").value = cells[0].textContent;
+    document.getElementById("teacher").value = cells[1].textContent;
+    const time = cells[2].textContent.split(" - ");
+    document.getElementById("start-time").value = time[0];
+    document.getElementById("end-time").value = time[1];
+    const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+    days.forEach(((day, index) => {
+        document.getElementById(day).checked = cells[index + 3].textContent === "✔"
+    }));
+    itemBeingEdited = row
+}
+
+function searchTable(type) {
+    const searchTerm = document.getElementById(`search-${type}`).value.toLowerCase();
+    const rows = document.querySelectorAll("#schedule-table tbody tr");
+    rows.forEach((row => {
+        const cell = row.querySelector(`td:nth-child(${type==="subject"?1:2})`).textContent.toLowerCase();
+        row.style.display = cell.includes(searchTerm) ? "" : "none"
+    }))
+}
+
+function searchAndFilterSchedule() {
+    const searchTerm = document.getElementById("search-input").value.toLowerCase();
+    const rows = document.querySelectorAll("#schedule-body tr");
+    rows.forEach((row => {
+        const subject = row.querySelector("td:nth-child(1)").textContent.toLowerCase();
+        const teacher = row.querySelector("td:nth-child(2)").textContent.toLowerCase();
+        row.style.display = subject.includes(searchTerm) || teacher.includes(searchTerm) ? "" : "none"
+    }))
+}
+document.getElementById("search-input").addEventListener("input", searchAndFilterSchedule);
+
+function showNotification(message, type) {
+    const notification = document.createElement("div");
+    notification.className = `popup show ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    setTimeout((() => {
+        notification.classList.remove("show");
+        document.body.removeChild(notification)
+    }), 3e3)
+}
+
+function setupSnowflakes() {
+    const snowflakes = document.querySelectorAll(".snowflake");
+    snowflakes.forEach((snowflake => {
+        snowflake.addEventListener("click", (() => snowflake.classList.toggle("paused")))
+    }))
+}
+
+function loadScheduleFromLocalStorage() {
+    const scheduleData = JSON.parse(localStorage.getItem("scheduleData")) || [];
+    scheduleData.forEach((data => {
+        const scheduleRow = document.createElement("tr");
+        scheduleRow.classList.add("visible");
+        scheduleRow.innerHTML = `\n            <td>${data.subject}</td>\n            <td>${data.teacher}</td>\n            <td>${data.time}</td>\n            ${data.days.map((day=>`<td>${day?"✔":""}</td>`)).join("")}\n            <td><button onclick="openDeleteModal(this.parentElement.parentElement)">Xóa</button></td>\n            <td><button onclick="editSchedule(this.parentElement.parentElement)">Chỉnh sửa</button></td>\n        `;
+        document.getElementById("schedule-body").appendChild(scheduleRow)
+    }));
+    setTimeout((() => {
+        document.querySelectorAll("#schedule-body tr").forEach((row => row.classList.add("visible")))
+    }), 0)
+}
+
+function validateAndUpdateSchedule() {
+    if (!validateForm()) return;
+    const subject = document.getElementById("subject").value;
+    const teacher = document.getElementById("teacher").value;
+    const startTime = document.getElementById("start-time").value;
+    const endTime = document.getElementById("end-time").value;
+    const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+    const daysChecked = days.map((day => document.getElementById(day).checked ? "✔" : ""));
+    let scheduleRow;
+    if (itemBeingEdited) {
+        scheduleRow = itemBeingEdited;
+        scheduleRow.style.transition = "background-color 0.5s";
+        scheduleRow.classList.add("updated");
+        scheduleRow.innerHTML = `\n            <td>${subject}</td>\n            <td>${teacher}</td>\n            <td>${startTime} - ${endTime}</td>\n            ${daysChecked.map((day=>`<td>${day}</td>`)).join("")}\n            <td><button onclick="openDeleteModal(this.parentElement.parentElement)">Xóa</button></td>\n            <td><button onclick="editSchedule(this.parentElement.parentElement)">Chỉnh sửa</button></td>\n        `
+    } else {
+        scheduleRow = document.createElement("tr");
+        scheduleRow.innerHTML = `\n            <td>${subject}</td>\n            <td>${teacher}</td>\n            <td>${startTime} - ${endTime}</td>\n            ${daysChecked.map((day=>`<td>${day}</td>`)).join("")}\n            <td><button onclick="openDeleteModal(this.parentElement.parentElement)">Xóa</button></td>\n            <td><button onclick="editSchedule(this.parentElement.parentElement)">Chỉnh sửa</button></td>\n        `;
+        document.getElementById("schedule-body").appendChild(scheduleRow)
+    }
+    saveScheduleToLocalStorage();
+    clearForm();
+    showNotification("Cập nhật thành công!", "success");
+    itemBeingEdited = null
+}
+
+function exportToCSV() {
+    const rows = document.querySelectorAll("#schedule-table tr");
+    let csvContent = "\ufeff";
+    rows.forEach((row => {
+        let rowData = Array.from(row.querySelectorAll("td, th")).map((cell => cell.textContent)).join(",");
+        csvContent += rowData + "\r\n"
+    }));
+    const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "thoi_khoa_bieu.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showNotification("Xuất CSV thành công!", "success")
+}
+
+function showInfoPopup() {
+    const popup = document.getElementById("info-popup");
+    popup.style.display = "block";
+    setTimeout((() => {
+        popup.classList.add("show");
+        popup.classList.remove("hide")
+    }), 10);
+    updatePopupContent();
+    setTimeout((() => {
+        closeInfoPopup()
+    }), 1e4)
+}
+
+function closeInfoPopup() {
+    const popup = document.getElementById("info-popup");
+    popup.classList.add("hide");
+    popup.classList.remove("show");
+    setTimeout((() => {
+        popup.style.display = "none"
+    }), 500)
+}
+
+function updatePopupContent() {
+    const today = new Date;
+    const dayOfWeek = today.toLocaleString("vi-VN", {
+        weekday: "long"
+    });
+    const dateStr = today.toLocaleDateString("vi-VN");
+    const holidays = {
+        "01/01": "Tết Dương Lịch",
+        "30/04": "Ngày Giải Phóng",
+        "01/05": "Quốc tế Lao Động",
+        "02/09": "Quốc khánh"
+    };
+    const holidayInfo = holidays[dateStr.slice(0, 5)] || "Không có ngày lễ đặc biệt";
+    document.getElementById("current-day").textContent = `Hôm nay là: ${dayOfWeek}, ${dateStr}`;
+    document.getElementById("holiday-info").textContent = `Ngày lễ: ${holidayInfo}`;
+    document.getElementById("today-schedule-info").textContent = `Lịch học hôm nay: ${getTodaySchedule()}`;
+    const gifElement = document.getElementById("today-schedule-gif");
+    const todaySchedule = getTodaySchedule();
+    if (todaySchedule.includes("Không có lịch học nào")) {
+        gifElement.src = "assets/images/play.gif"
+    } else {
+        gifElement.src = "assets/images/study.gif"
+    }
+    gifElement.style.display = "block"
+}
+
+function requestNotificationPermission() {
+    if ("Notification" in window) {
+        if (Notification.permission === "default" || Notification.permission === "denied") {
+            const interval = setInterval((() => {
+                Notification.requestPermission().then((permission => {
+                    if (permission === "granted") {
+                        clearInterval(interval);
+                        console.log("Đã cấp quyền thông báo.")
+                    } else {
+                        console.log("Người dùng từ chối quyền thông báo.")
+                    }
+                }))
+            }), 1e3)
+        }
+    } else {
+        console.log("Trình duyệt không hỗ trợ Notification API.")
+    }
+}
+
+function checkDeviceOrientation() {
+    const orientationWarning = document.getElementById("orientation-warning");
+    if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+        if (window.innerHeight > window.innerWidth) {
+            orientationWarning.style.display = "block"
+        } else {
+            orientationWarning.style.display = "none"
+        }
+    } else {
+        orientationWarning.style.display = "none"
+    }
+}
+window.addEventListener("load", checkDeviceOrientation);
+window.addEventListener("resize", checkDeviceOrientation);
+const API_KEYY = "db0515323dc243a4a56114131241010";
+async function fetchWeather() {
+    const weatherElement = document.getElementById("weather");
+    try {
+        navigator.geolocation.getCurrentPosition((async position => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${API_KEYY}&q=${latitude},${longitude}&lang=vi`;
+            const response = await fetch(apiUrl);
+            if (!response.ok) throw new Error("Không thể lấy dữ liệu thời tiết");
+            const data = await response.json();
+            const temperature = data.current.temp_c;
+            const description = data.current.condition.text;
+            const iconUrl = data.current.condition.icon;
+            weatherElement.innerHTML = `<img src="${iconUrl}" alt="Weather Icon">${temperature}°C, ${description}`;
+            const weatherText = `Nhiệt độ hiện tại là ${temperature} độ C, và trời đang ${description}`;
+            speak(weatherText);
+            addChatMessage("bot", weatherText)
+        }), (() => {
+            weatherElement.textContent = "Không thể lấy vị trí. Vui lòng cấp quyền truy cập."
+        }))
+    } catch (error) {
+        weatherElement.textContent = "Không thể lấy dữ liệu thời tiết.";
+        console.error(error)
+    }
+}
+
+function addNewItem(item) {
+    item.classList.add("fade-in");
+    document.getElementById("schedule-body").appendChild(item)
+}
+
+function requestNotificationPermission() {
+    if ("Notification" in window) {
+        if (Notification.permission === "granted") {
+            showNotification("Thông báo đẩy đã được kích hoạt!", "Chúc bạn học tốt!")
+        } else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then((permission => {
+                if (permission === "granted") {
+                    showNotification("Thông báo đẩy đã được kích hoạt!", "Chúc bạn học tốt!")
+                }
+            }))
+        }
+    }
+}
+
+function showNotification(title, body) {
+    new Notification(title, {
+        body: body,
+        icon: "assets/images/notification-icon.png"
+    })
+}
+
+function initDarkMode() {
+    const isDarkMode = localStorage.getItem("darkMode") === "enabled";
+    if (isDarkMode) {
+        document.body.classList.add("dark-mode");
+        document.getElementById("dark-mode-toggle").checked = true;
+        document.getElementById("dark-mode-label").textContent = "Chế độ tối";
+        document.getElementById("mode-icon").classList.replace("fa-sun", "fa-moon")
+    }
+}
+
+function toggleDarkMode() {
+    const isDarkMode = document.body.classList.toggle("dark-mode");
+    document.getElementById("dark-mode-label").textContent = isDarkMode ? "Chế độ tối" : "Chế độ sáng";
+    document.getElementById("mode-icon").classList.toggle("fa-sun", !isDarkMode);
+    document.getElementById("mode-icon").classList.toggle("fa-moon", isDarkMode);
+    localStorage.setItem("darkMode", isDarkMode ? "enabled" : "disabled")
+}
+
+function applyAdvancedFilter() {
+    const dayFilter = document.getElementById("filter-day").value.toLowerCase();
+    const typeFilter = document.getElementById("filter-type").value.toLowerCase();
+    const teacherFilter = document.getElementById("filter-teacher").value.toLowerCase();
+    const startTime = document.getElementById("filter-time-start").value;
+    const endTime = document.getElementById("filter-time-end").value;
+    const rows = document.querySelectorAll("#schedule-body tr");
+    rows.forEach((row => {
+        const cells = row.children;
+        const day = cells[4].textContent.toLowerCase();
+        const type = cells[0].textContent.toLowerCase();
+        const teacher = cells[1].textContent.toLowerCase();
+        const time = cells[2].textContent.split(" - ");
+        const rowStartTime = time[0];
+        const rowEndTime = time[1];
+        let match = true;
+        if (dayFilter && !day.includes(dayFilter)) {
+            match = false
+        }
+        if (typeFilter && !type.includes(typeFilter)) {
+            match = false
+        }
+        if (teacherFilter && !teacher.includes(teacherFilter)) {
+            match = false
+        }
+        if (startTime && rowStartTime < startTime) {
+            match = false
+        }
+        if (endTime && rowEndTime > endTime) {
+            match = false
+        }
+        row.style.display = match ? "" : "none"
+    }))
+}
+
+function applyAdvancedFilter() {
+    const dayFilter = document.getElementById("filter-day").value.toLowerCase();
+    const typeFilter = document.getElementById("filter-type").value.toLowerCase();
+    const teacherFilter = document.getElementById("filter-teacher").value.toLowerCase();
+    const startTime = document.getElementById("filter-time-start").value;
+    const endTime = document.getElementById("filter-time-end").value;
+    const rows = document.querySelectorAll("#schedule-body tr");
+    rows.forEach((row => {
+        const cells = row.children;
+        const day = cells[4].textContent.toLowerCase();
+        const type = cells[0].textContent.toLowerCase();
+        const teacher = cells[1].textContent.toLowerCase();
+        const time = cells[2].textContent.split(" - ");
+        const rowStartTime = time[0];
+        const rowEndTime = time[1];
+        let match = true;
+        if (dayFilter && !day.includes(dayFilter)) {
+            match = false
+        }
+        if (typeFilter && !type.includes(typeFilter)) {
+            match = false
+        }
+        if (teacherFilter && !teacher.includes(teacherFilter)) {
+            match = false
+        }
+        if (startTime && rowStartTime < startTime) {
+            match = false
+        }
+        if (endTime && rowEndTime > endTime) {
+            match = false
+        }
+        row.style.display = match ? "" : "none"
+    }))
+}
+const keywords = ["lý thuyết", "thực hành", "giáo viên A", "giáo viên B", "thứ 2", "thứ 3"];
+
+function showSuggestions() {
+    const input = document.getElementById("search-input").value.toLowerCase();
+    const suggestionBox = document.getElementById("suggestions");
+    suggestionBox.innerHTML = "";
+    suggestionBox.style.display = "none";
+    if (input.length === 0) {
+        return
+    }
+    const filteredSuggestions = keywords.filter((keyword => keyword.toLowerCase().includes(input)));
+    if (filteredSuggestions.length > 0) {
+        suggestionBox.style.display = "block";
+        filteredSuggestions.forEach((suggestion => {
+            const div = document.createElement("div");
+            div.classList.add("suggestion-item");
+            div.textContent = suggestion;
+            div.onclick = () => {
+                document.getElementById("search-input").value = suggestion;
+                suggestionBox.style.display = "none"
+            };
+            suggestionBox.appendChild(div)
+        }))
+    }
+}
+
+function speak(text) {
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = "vi-VN";
+    window.speechSynthesis.speak(speech)
+}
+
+function handleCredentialResponse(response) {
+    console.log("Encoded JWT ID token: " + response.credential);
+    const decodedJwt = parseJwt(response.credential);
+    console.log("Decoded JWT ID token:", decodedJwt);
+    fetch("/your-backend-verification-endpoint", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            id_token: response.credential
+        })
+    }).then((response => response.json())).then((data => {
+        console.log("Success:", data)
+    })).catch((error => {
+        console.error("Error:", error)
+    }))
+}
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", (() => {
+        navigator.serviceWorker.register("/service-worker.js").then((registration => {
+            console.log("Service Worker đã được đăng ký với scope:", registration.scope)
+        })).catch((error => {
+            console.log("Đăng ký Service Worker thất bại:", error)
+        }))
+    }))
+}
+let hangDoiDongBo = [];
+
+function dongBoDuLieu() {
+    if (navigator.onLine) {
+        hangDoiDongBo.forEach((item => {
+            fetch("/api/sync", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(item)
+            }).then((response => {
+                if (response.ok) {
+                    console.log("Đồng bộ dữ liệu thành công:", item)
+                }
+            })).catch((error => console.error("Lỗi đồng bộ:", error)))
+        }));
+        hangDoiDongBo = []
+    }
+}
+window.addEventListener("online", dongBoDuLieu);
+
+function capNhatThoiKhoaBieuOffline(duLieu) {
+    if (navigator.onLine) {
+        fetch("/api/sync", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(duLieu)
+        })
+    } else {
+        hangDoiDongBo.push(duLieu);
+        console.log("Đã lưu vào hàng đợi để đồng bộ sau:", duLieu)
+    }
+}
+
+function filterScheduleData() {
+    const filterType = document.getElementById("export-filter-type").value;
+    const filterValue = document.getElementById("export-filter-value").value.toLowerCase();
+    const scheduleData = JSON.parse(localStorage.getItem("scheduleData")) || [];
+    return scheduleData.filter((item => {
+        if (filterType === "day") {
+            return item.days.includes(filterValue)
+        } else if (filterType === "subject") {
+            return item.subject.toLowerCase().includes(filterValue)
+        } else if (filterType === "teacher") {
+            return item.teacher.toLowerCase().includes(filterValue)
+        }
+        return true
+    }))
+}
+
+function exportToExcel(data) {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "ThoiKhoaBieu");
+    XLSX.writeFile(workbook, "thoi_khoa_bieu.xlsx")
+}
+
+function exportToJson(data) {
+    const jsonString = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonString], {
+        type: "application/json"
+    });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "thoi_khoa_bieu.json";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link)
+}
+
+function exportToXml(data) {
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<schedule>\n';
+    data.forEach((item => {
+        xml += "  <subject>\n";
+        xml += `    <name>${item.subject}</name>\n`;
+        xml += `    <teacher>${item.teacher}</teacher>\n`;
+        xml += `    <time>${item.time}</time>\n`;
+        xml += "    <days>\n";
+        item.days.forEach(((day, index) => {
+            if (day) {
+                xml += `      <day>${["monday","tuesday","wednesday","thursday","friday","saturday","sunday"][index]}</day>\n`
+            }
+        }));
+        xml += "    </days>\n";
+        xml += "  </subject>\n"
+    }));
+    xml += "</schedule>";
+    const blob = new Blob([xml], {
+        type: "application/xml"
+    });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "thoi_khoa_bieu.xml";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link)
+}
+
+function exportData(format) {
+    const filteredData = filterScheduleData();
+    if (format === "excel") {
+        exportToExcel(filteredData)
+    } else if (format === "json") {
+        exportToJson(filteredData)
+    } else if (format === "xml") {
+        exportToXml(filteredData)
+    } else {
+        console.error("Định dạng không hỗ trợ:", format)
+    }
+}
+window.onload = function() {
+    initPage();
+    initDarkMode();
+    showInfoPopup();
+    displayCurrentDateTime();
+    setupScrollToTopButton();
+    setupSnowflakes();
+    updateTodaySchedule();
+    fetchWeather();
+    checkDeviceOrientation();
+    requestNotificationPermission()
+};
+    </script>
+  </body>
+</html>

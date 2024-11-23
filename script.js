@@ -149,5 +149,21 @@ async function loadContentFromJson() {
     }
 }
 
+function redirectToDemo(sectionId) {
+    const demoLinks = {
+        'demo-clb': '/demo/clb.html', // Liên kết demo cho CLB.html
+        'demo-tkb': '/demo/tkb.html', // Liên kết demo tkb.html
+        'demo-thong_tin': '/demo/thong_tin.html', // Liên kết demo thong_tin.html
+        'demo-dinh_dang': '/demo/dinh_dang.html', // Liên kết demo dinh_dang.html
+    };
+
+    const demoUrl = demoLinks[sectionId];
+    if (demoUrl) {
+        window.open(demoUrl, '_blank'); // Mở liên kết trong tab mới
+    } else {
+        alert('Hiện chưa có liên kết demo cho phần này.');
+    }
+}
+
 // Gọi hàm khi trang tải xong
 document.addEventListener('DOMContentLoaded', loadContentFromJson);
