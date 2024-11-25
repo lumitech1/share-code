@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const popup = document.getElementById("popup");
     const closePopupBtn = document.getElementById("close-popup");
 
@@ -7,31 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     audio.loop = true; // Lặp nhạc
     audio.volume = 0.5; // Âm lượng 50%
 
-    // Hiển thị popup khi trang được tải
-    if (popup) {
-        popup.style.display = "flex"; // Hiển thị popup
-        setTimeout(() => {
-            popup.classList.add("fade-out");
-            setTimeout(() => {
-                popup.style.display = "none"; // Ẩn popup sau khi fade-out
-            }, 1000);
-        }, 5000); // Tự động đóng popup sau 5 giây nếu không nhấn nút
-    }
-
-    // Sự kiện đóng popup
-    if (closePopupBtn) {
-        closePopupBtn.addEventListener("click", () => {
-            popup.classList.add("fade-out");
-            setTimeout(() => {
-                popup.style.display = "none"; // Ẩn popup
-                audio.play().catch((error) => {
-                    console.error("Không thể phát nhạc:", error);
-                }); // Phát nhạc khi popup đóng
-            }, 1000);
-        });
-    }
-
-    // Tải nội dung từ JSON (nếu có)
+    // Hàm tải nội dung từ JSON
     async function loadContentFromJson() {
         try {
             const response = await fetch('data.json');
@@ -63,25 +39,34 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Sao chép nội dung vào clipboard
-    window.copyToClipboard = (elementId) => {
-        const textArea = document.getElementById(elementId);
-        textArea.select();
-        document.execCommand("copy");
-        hienThiThongBao("Đã sao chép vào clipboard!");
-    };
+    // Khởi tạo popup sau khi tải JSON xong
+    async function initializePopup() {
+        await loadContentFromJson();
 
-    // Tải xuống mã từ textarea
-    window.downloadCode = (elementId, fileName) => {
-        const textArea = document.getElementById(elementId);
-        const text = textArea.value;
-        const blob = new Blob([text], { type: "text/plain" });
-        const link = document.createElement("a");
-        link.download = fileName;
-        link.href = URL.createObjectURL(blob);
-        link.click();
-        hienThiThongBao(`Đã tải xuống ${fileName}`);
-    };
+        // Hiển thị popup sau khi hoàn tất tải dữ liệu
+        if (popup) {
+            popup.style.display = "flex"; // Hiển thị popup
+            setTimeout(() => {
+                popup.classList.add("fade-out");
+                setTimeout(() => {
+                    popup.style.display = "none"; // Ẩn popup sau khi fade-out
+                }, 1000);
+            }, 5000); // Tự động đóng popup sau 5 giây nếu không nhấn nút
+        }
+
+        // Sự kiện đóng popup
+        if (closePopupBtn) {
+            closePopupBtn.addEventListener("click", () => {
+                popup.classList.add("fade-out");
+                setTimeout(() => {
+                    popup.style.display = "none"; // Ẩn popup
+                    audio.play().catch((error) => {
+                        console.error("Không thể phát nhạc:", error);
+                    }); // Phát nhạc khi popup đóng
+                }, 1000);
+            });
+        }
+    }
 
     // Hiển thị thông báo popup
     function hienThiThongBao(noiDung) {
@@ -159,6 +144,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Khởi tạo
-    loadContentFromJson(); // Tải dữ liệu JSON (nếu có)
-    initCodeMirror(); // Tạo CodeMirror
+    await initializePopup();
+    initCodeMirror();
 });
