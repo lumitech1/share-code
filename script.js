@@ -1,25 +1,28 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Logic hiển thị Popup
     const popup = document.getElementById("popup");
     const closePopupBtn = document.getElementById("close-popup");
+    const audio = new Audio("music.mp3");
+    audio.loop = true;
+    audio.volume = 0.5;
+
     if (popup && closePopupBtn) {
+        // Khi nhấn nút đóng popup, phát nhạc
         closePopupBtn.addEventListener("click", () => {
             popup.classList.add("fade-out");
-            setTimeout(() => popup.style.display = "none", 1000);
+            setTimeout(() => {
+                popup.style.display = "none";
+                // Phát nhạc
+                audio.play().catch((error) => {
+                    console.error("Không thể phát nhạc:", error);
+                });
+            }, 1000);
         });
     }
 
-    // Logic phát nhạc tự động
-    const audio = new Audio("https://on.soundcloud.com/PKzJTjzDEFbv7djA7"); // Đường dẫn tới file nhạc trên SoundCloud
-    audio.autoplay = true; // Phát tự động
-    audio.loop = true;     // Phát lại liên tục
-    audio.volume = 0.5;    // Điều chỉnh âm lượng (0.0 đến 1.0)
-
-    // Bắt đầu phát nhạc
-    audio.play().catch((error) => {
-        console.error("Không thể tự động phát nhạc:", error);
-    });
+    // Hiển thị popup khi trang được tải
+    popup.style.display = "flex";
 });
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const popup = document.getElementById('popup');
@@ -51,6 +54,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     });
 });
+
+// Tạo thông báo pop-up
+    function hienThiThongBao(noiDung) {
+        const popup = document.createElement('div');
+        popup.className = 'action-popup';
+        popup.textContent = noiDung;
+
+        document.body.appendChild(popup);
+
+        setTimeout(() => {
+            popup.classList.add('fade-out');
+            setTimeout(() => popup.remove(), 1000);
+        }, 2000);
+    }
+
+    // Sao chép vào clipboard với thông báo
+    window.copyToClipboard = (elementId) => {
+        const textArea = document.getElementById(elementId);
+        textArea.select();
+        textArea.setSelectionRange(0, 99999); // Dành cho thiết bị di động
+        document.execCommand("copy");
+
+        // Hiển thị thông báo
+        hienThiThongBao("Đã sao chép vào clipboard!");
+    };
+
+    // Tải xuống file với thông báo
+    window.downloadCode = (elementId, fileName) => {
+        const textArea = document.getElementById(elementId);
+        const text = textArea.value;
+        const blob = new Blob([text], { type: "text/plain" });
+        const link = document.createElement("a");
+        link.download = fileName;
+        link.href = window.URL.createObjectURL(blob);
+        link.click();
+
+        // Hiển thị thông báo
+        hienThiThongBao(`Đã tải xuống ${fileName}`);
+    };
 
 // Chức năng Copy
 function copyToClipboard(elementId) {
@@ -139,10 +181,191 @@ async function loadContentFromJson() {
         document.getElementById('clb.html').value = data.html.clb;
         document.getElementById('css-clb').value = data.css.clb;
         document.getElementById('js-clb').value = data.javascript.clb;
+
+        // Gắn nội dung vào các <textarea> của "Định Dạng Văn Bản"
+        document.getElementById('dinh_dang.html').value = data.html.dinh_dang;
+        document.getElementById('css-dinhdang').value = data.css.dinh_dang;
+        document.getElementById('js-dinhdang').value = data.javascript.dinh_dang;
+		
+		// Gắn nội dung vào các <textarea> của "chatbot"
+        document.getElementById('chatbot.html').value = data.html.chatbot;
+        document.getElementById('css-chatbot').value = data.css.chatbot;
+        document.getElementById('js-chatbot').value = data.javascript.chatbot;
     } catch (error) {
         console.error('Lỗi khi tải dữ liệu JSON:', error);
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Tạo thông báo đếm ngược pop-up
+    function hienThiDemNguoc(noiDung, thoiGian, callback) {
+        const popup = document.createElement('div');
+        popup.className = 'action-popup countdown-popup';
+        popup.innerHTML = `
+            <p>${noiDung}</p>
+            <p>Vui Lòng Chờ...</p>
+            <p id="countdown">${thoiGian}s</p>
+        `;
+
+        document.body.appendChild(popup);
+
+        const countdownElement = document.getElementById('countdown');
+        let demNguoc = thoiGian;
+
+        const interval = setInterval(() => {
+            demNguoc--;
+            countdownElement.textContent = `${demNguoc}s`;
+            if (demNguoc <= 0) {
+                clearInterval(interval);
+                popup.classList.add('fade-out');
+                setTimeout(() => popup.remove(), 1000);
+                if (callback) callback();
+            }
+        }, 1000);
+    }
+
+    // Chuyển hướng đến trang Demo
+    window.redirectToDemo = (sectionId) => {
+        const demoLinks = {
+            'demo-clb': '/share-code/demo/clb.html', // Liên kết demo cho CLB.html
+            'demo-tkb': '/share-code/demo/tkb.html', // Liên kết demo tkb.html
+            'demo-thong_tin': '/share-code/demo/thong_tin.html', // Liên kết demo thong_tin.html
+            'demo-dinh_dang': '/share-code/demo/dinh_dang.html', // Liên kết demo dinh_dang.html
+			'demo-chatbot': '/share-code/demo/chatbot.html', // Liên kết demo chatbot.html
+        };
+
+        const demoUrl = demoLinks[sectionId];
+        if (demoUrl) {
+            hienThiDemNguoc("Đang chuyển hướng đến trang Demo", 10, () => {
+                window.open(demoUrl, '_blank'); // Mở trang Demo sau khi đếm ngược
+            });
+        } else {
+            alert('Hiện chưa có liên kết demo cho phần này.');
+        }
+    };
+});
+
+// Khởi tạo CodeMirror cho từng phần mã
+//CLB.html
+const htmlEditor = CodeMirror.fromTextArea(document.getElementById("clb.html"), {
+    mode: "xml", // Làm nổi bật cú pháp HTML
+    theme: "material", // Giao diện tối
+    lineNumbers: true, // Hiển thị số dòng
+    autoCloseTags: true, // Tự động đóng thẻ
+    styleActiveLine: true, // Làm nổi bật dòng hiện tại
+});
+
+const cssEditor = CodeMirror.fromTextArea(document.getElementById("css-clb"), {
+    mode: "css", // Làm nổi bật cú pháp CSS
+    theme: "material", // Giao diện tối
+    lineNumbers: true, // Hiển thị số dòng
+    autoCloseBrackets: true, // Tự động đóng ngoặc
+    styleActiveLine: true, // Làm nổi bật dòng hiện tại
+});
+
+const jsEditor = CodeMirror.fromTextArea(document.getElementById("js-clb"), {
+    mode: "javascript", // Làm nổi bật cú pháp JavaScript
+    theme: "material", // Giao diện tối
+    lineNumbers: true, // Hiển thị số dòng
+    autoCloseBrackets: true, // Tự động đóng ngoặc
+    styleActiveLine: true, // Làm nổi bật dòng hiện tại
+});
+//thong_tin.html
+const htmlEditor2 = CodeMirror.fromTextArea(document.getElementById("thong_tin.html"), {
+    mode: "xml", // Làm nổi bật cú pháp HTML
+    theme: "material", // Giao diện tối
+    lineNumbers: true, // Hiển thị số dòng
+    autoCloseTags: true, // Tự động đóng thẻ
+    styleActiveLine: true, // Làm nổi bật dòng hiện tại
+});
+
+const cssEditor2 = CodeMirror.fromTextArea(document.getElementById("css-thongtin"), {
+    mode: "css", // Làm nổi bật cú pháp CSS
+    theme: "material", // Giao diện tối
+    lineNumbers: true, // Hiển thị số dòng
+    autoCloseBrackets: true, // Tự động đóng ngoặc
+    styleActiveLine: true, // Làm nổi bật dòng hiện tại
+});
+
+const jsEditor2 = CodeMirror.fromTextArea(document.getElementById("js-thongtin"), {
+    mode: "javascript", // Làm nổi bật cú pháp JavaScript
+    theme: "material", // Giao diện tối
+    lineNumbers: true, // Hiển thị số dòng
+    autoCloseBrackets: true, // Tự động đóng ngoặc
+    styleActiveLine: true, // Làm nổi bật dòng hiện tại
+});
+//tkb.html
+const htmlEditor3 = CodeMirror.fromTextArea(document.getElementById("tkb.html"), {
+    mode: "xml", // Làm nổi bật cú pháp HTML
+    theme: "material", // Giao diện tối
+    lineNumbers: true, // Hiển thị số dòng
+    autoCloseTags: true, // Tự động đóng thẻ
+    styleActiveLine: true, // Làm nổi bật dòng hiện tại
+});
+
+const cssEditor3 = CodeMirror.fromTextArea(document.getElementById("css-tkb"), {
+    mode: "css", // Làm nổi bật cú pháp CSS
+    theme: "material", // Giao diện tối
+    lineNumbers: true, // Hiển thị số dòng
+    autoCloseBrackets: true, // Tự động đóng ngoặc
+    styleActiveLine: true, // Làm nổi bật dòng hiện tại
+});
+
+const jsEditor3 = CodeMirror.fromTextArea(document.getElementById("js-tkb"), {
+    mode: "javascript", // Làm nổi bật cú pháp JavaScript
+    theme: "material", // Giao diện tối
+    lineNumbers: true, // Hiển thị số dòng
+    autoCloseBrackets: true, // Tự động đóng ngoặc
+    styleActiveLine: true, // Làm nổi bật dòng hiện tại
+});
+//chatbot.html
+const htmlEditor4 = CodeMirror.fromTextArea(document.getElementById("chatbot.html"), {
+    mode: "xml", // Làm nổi bật cú pháp HTML
+    theme: "material", // Giao diện tối
+    lineNumbers: true, // Hiển thị số dòng
+    autoCloseTags: true, // Tự động đóng thẻ
+    styleActiveLine: true, // Làm nổi bật dòng hiện tại
+});
+
+const cssEditor4 = CodeMirror.fromTextArea(document.getElementById("css-chatbot"), {
+    mode: "css", // Làm nổi bật cú pháp CSS
+    theme: "material", // Giao diện tối
+    lineNumbers: true, // Hiển thị số dòng
+    autoCloseBrackets: true, // Tự động đóng ngoặc
+    styleActiveLine: true, // Làm nổi bật dòng hiện tại
+});
+
+const jsEditor4 = CodeMirror.fromTextArea(document.getElementById("js-chatbot"), {
+    mode: "javascript", // Làm nổi bật cú pháp JavaScript
+    theme: "material", // Giao diện tối
+    lineNumbers: true, // Hiển thị số dòng
+    autoCloseBrackets: true, // Tự động đóng ngoặc
+    styleActiveLine: true, // Làm nổi bật dòng hiện tại
+});
+//dinh_dang.html
+const htmlEditor5 = CodeMirror.fromTextArea(document.getElementById("dinh_dang.html"), {
+    mode: "xml", // Làm nổi bật cú pháp HTML
+    theme: "material", // Giao diện tối
+    lineNumbers: true, // Hiển thị số dòng
+    autoCloseTags: true, // Tự động đóng thẻ
+    styleActiveLine: true, // Làm nổi bật dòng hiện tại
+});
+
+const cssEditor5 = CodeMirror.fromTextArea(document.getElementById("css-dinhdang"), {
+    mode: "css", // Làm nổi bật cú pháp CSS
+    theme: "material", // Giao diện tối
+    lineNumbers: true, // Hiển thị số dòng
+    autoCloseBrackets: true, // Tự động đóng ngoặc
+    styleActiveLine: true, // Làm nổi bật dòng hiện tại
+});
+
+const jsEditor5 = CodeMirror.fromTextArea(document.getElementById("js-dinhdang"), {
+    mode: "javascript", // Làm nổi bật cú pháp JavaScript
+    theme: "material", // Giao diện tối
+    lineNumbers: true, // Hiển thị số dòng
+    autoCloseBrackets: true, // Tự động đóng ngoặc
+    styleActiveLine: true, // Làm nổi bật dòng hiện tại
+});
 
 // Gọi hàm khi trang tải xong
 document.addEventListener('DOMContentLoaded', loadContentFromJson);

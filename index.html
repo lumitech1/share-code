@@ -5,19 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang Chia Sẻ Mã Code - Nguyễn Hoàng Nam</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/material.css">
 </head>
+    <header>
+        <img src="https://raw.githubusercontent.com/lumitech1/chatbot/refs/heads/master/images/logo.png" alt="Logo Trang Web" class="logo">
+    </header>
 <body>
     <!-- Popup -->
     <div id="popup" class="popup">
-        <div class="popup-content">
-            <h2>Nam Nhắc Bạn!</h2>
-            <p id="current-date"></p>
-            <p>Chúc bạn một ngày vui vẻ, tràn đầy năng lượng!</p>
-            <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExem9oZnptbzkwMGh4azdxam80MDVnaGF5MHg4MDYyMGhncnU0cDRvdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gUiVIJC1ZYtdPVj4Nb/giphy.gif" alt="GIF vui vẻ" class="popup-gif">
-            <p>© 2024 Nguyễn Hoàng Nam.</p>
-            <button id="close-popup" class="popup-close-btn">Đóng</button>
-        </div>
+    <div class="popup-content">
+        <h2>💖 Nam Nhắc Bạn!</h2>
+        <p id="current-date"></p>
+        <p>Chúc bạn một ngày vui vẻ, tràn đầy năng lượng!</p>
+        <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExem9oZnptbzkwMGh4azdxam80MDVnaGF5MHg4MDYyMGhncnU0cDRvdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gUiVIJC1ZYtdPVj4Nb/giphy.gif" alt="GIF">
+        <p>© 2024 Nguyễn Hoàng Nam</p>
+        <button id="close-popup" class="popup-close-btn">Đóng</button>
     </div>
+</div>
+
     <!-- Phần Code Thời Khóa Biểu -->
     <section class="code-group">
         <h1 class="main-title">Code Thời Khóa Biểu - © 2024 Nguyễn Hoàng Nam </h1>
@@ -32,6 +38,7 @@
                 <div class="buttons">
                     <button onclick="copyToClipboard('clb.html')">Copy</button>
                     <button onclick="downloadCode('clb.html', 'CLB.html')">Download</button>
+                    <button onclick="redirectToDemo('demo-clb')">Demo</button>
                 </div>
             </div>
             <!-- Khu vực CSS -->
@@ -74,6 +81,7 @@
                 <div class="buttons">
                     <button onclick="copyToClipboard('thong_tin.html')">Copy</button>
                     <button onclick="downloadCode('thong_tin.html', 'thong_tin.html')">Download</button>
+                    <button onclick="redirectToDemo('demo-thong_tin')">Demo</button>
                 </div>
             </div>
             <!-- Khu vực CSS -->
@@ -116,6 +124,7 @@
                 <div class="buttons">
                     <button onclick="copyToClipboard('tkb.html')">Copy</button>
                     <button onclick="downloadCode('tkb.html', 'tkb.html')">Download</button>
+                    <button onclick="redirectToDemo('demo-tkb')">Demo</button>
                 </div>
             </div>
             <!-- Khu vực CSS -->
@@ -144,9 +153,99 @@
             </div>
         </div>
     </section>
+    <!-- Phần Code Chatbot -->
+    <section class="code-group">
+        <h1 class="main-title">Code LumiAI Chatbot - © 2024 Nguyễn Hoàng Nam </h1>
+        <div class="container">
+            <!-- Khu vực HTML -->
+            <div class="code-section html-section">
+                <div class="header">chatbot.html</div>
+                <div class="line-numbers-container">
+                    <div class="line-numbers"></div>
+                    <textarea id="chatbot.html" placeholder="Viết mã HTML của bạn tại đây..."></textarea>
+                </div>
+                <div class="buttons">
+                    <button onclick="copyToClipboard('chatbot.html')">Copy</button>
+                    <button onclick="downloadCode('chatbot.html', 'chatbot.html')">Download</button>
+                    <button onclick="redirectToDemo('demo-chatbot')">Demo</button>
+                </div>
+            </div>
+            <!-- Khu vực CSS -->
+            <div class="code-section css-section">
+                <div class="header">CSS</div>
+                <div class="line-numbers-container">
+                    <div class="line-numbers"></div>
+                    <textarea id="css-chatbot" placeholder="Viết mã CSS của bạn tại đây..."></textarea>
+                </div>
+                <div class="buttons">
+                    <button onclick="copyToClipboard('css-chatbot')">Copy</button>
+                    <button onclick="downloadCode('css-chatbot', 'styles.css')">Download</button>
+                </div>
+            </div>
+            <!-- Khu vực JavaScript -->
+            <div class="code-section js-section">
+                <div class="header">JavaScript</div>
+                <div class="line-numbers-container">
+                    <div class="line-numbers"></div>
+                    <textarea id="js-chatbot" placeholder="Viết mã JavaScript của bạn tại đây..."></textarea>
+                </div>
+                <div class="buttons">
+                    <button onclick="copyToClipboard('js-chatbot')">Copy</button>
+                    <button onclick="downloadCode('js-chatbot', 'script.js')">Download</button>
+                </div>
+            </div>
+        </div>
+    </section>
+	<!-- Phần Code Định Dạng Văn Bản -->
+	<section class="code-group">
+        <h1 class="main-title">Code Định Dạng Văn Bản và Phông Chữ - © 2024 Nguyễn Hoàng Nam </h1>
+        <div class="container">
+            <!-- Khu vực HTML -->
+            <div class="code-section html-section">
+                <div class="header">dinh_dang.html</div>
+                <div class="line-numbers-container">
+                    <div class="line-numbers"></div>
+                    <textarea id="dinh_dang.html" placeholder="Viết mã HTML của bạn tại đây..."></textarea>
+                </div>
+                <div class="buttons">
+                    <button onclick="copyToClipboard('dinh_dang.html')">Copy</button>
+                    <button onclick="downloadCode('dinh_dang.html', 'dinh_dang.html')">Download</button>
+                    <button onclick="redirectToDemo('demo-dinh_dang')">Demo</button>
+                </div>
+            </div>
+            <!-- Khu vực CSS -->
+            <div class="code-section css-section">
+                <div class="header">CSS</div>
+                <div class="line-numbers-container">
+                    <div class="line-numbers"></div>
+                    <textarea id="css-dinhdang" placeholder="Viết mã CSS của bạn tại đây..."></textarea>
+                </div>
+                <div class="buttons">
+                    <button onclick="copyToClipboard('css-dinhdang')">Copy</button>
+                    <button onclick="downloadCode('css-dinhdang', 'styles.css')">Download</button>
+                </div>
+            </div>
+            <!-- Khu vực JavaScript -->
+            <div class="code-section js-section">
+                <div class="header">JavaScript</div>
+                <div class="line-numbers-container">
+                    <div class="line-numbers"></div>
+                    <textarea id="js-dinhdang" placeholder="Viết mã JavaScript của bạn tại đây..."></textarea>
+                </div>
+                <div class="buttons">
+                    <button onclick="copyToClipboard('js-dinhdang')">Copy</button>
+                    <button onclick="downloadCode('js-dinhdang', 'script.js')">Download</button>
+                </div>
+            </div>
+        </div>
+    </section>
     <footer class="footer">
         © 2024 Nguyễn Hoàng Nam. All rights reserved.
     </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/css/css.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

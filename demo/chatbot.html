@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<!-- © 2024 Nguyễn Hoàng Nam. All rights reserved.  -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumi Chatbot | Lumi Chatbot By Nguyễn Hoàng Nam</title>
+  <link rel="icon" href="images/logo.png" type="image/png">
+  <!-- Linking Google Fonts For Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<style>
+/* Import Google Font - Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+:root {
+  /* Dark mode colors */
+  --text-color: #E3E3E3;
+  --subheading-color: #828282;
+  --placeholder-color: #A6A6A6;
+  --primary-color: #242424;
+  --secondary-color: #383838;
+  --secondary-hover-color: #444;
+}
+
+.light_mode {
+  /* Light mode colors */
+  --text-color: #222;
+  --subheading-color: #A0A0A0;
+  --placeholder-color: #6C6C6C;
+  --primary-color: #FFF;
+  --secondary-color: #E9EEF6;
+  --secondary-hover-color: #DBE1EA;
+}
+
+body {
+  background: var(--primary-color);
+}
+
+.header, .chat-list .message, .typing-form {
+  margin: 0 auto;
+  max-width: 980px;
+}
+
+.header {
+  margin-top: 6vh;
+  padding: 1rem;
+  overflow-x: hidden;
+}
+
+body.hide-header .header {
+  margin: 0;
+  display: none;
+}
+
+.header :where(.title, .subtitle) {
+  color: var(--text-color);
+  font-weight: 500;
+  line-height: 4rem;
+}
+
+.header .title {
+  width: fit-content;
+  font-size: 3rem;
+  background-clip: text;
+  background: linear-gradient(to right, #ef37fc, #8b45fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header .subtitle {
+  font-size: 2.6rem;
+  color: var(--subheading-color);
+}
+
+.suggestion-list {
+  width: 100%;
+  list-style: none;
+  display: flex;
+  gap: 1.25rem;
+  margin-top: 9.5vh;
+  overflow: hidden;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.suggestion-list .suggestion {
+  cursor: pointer;
+  padding: 1.25rem;
+  width: 222px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  border-radius: 0.75rem;
+  justify-content: space-between;
+  background: var(--secondary-color);
+  transition: 0.2s ease;
+}
+
+.suggestion-list .suggestion:hover {
+  background: var(--secondary-hover-color);
+}
+
+.suggestion-list .suggestion :where(.text, .icon) {
+  font-weight: 400;
+  color: var(--text-color);
+}
+
+.suggestion-list .suggestion .icon {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  font-size: 1.3rem;
+  margin-top: 2.5rem;
+  align-self: flex-end;
+  align-items: center;
+  border-radius: 50%;
+  justify-content: center;
+  color: var(--text-color);
+  background: var(--primary-color);
+}
+
+.chat-list {
+  padding: 2rem 1rem 12rem;
+  max-height: 100vh;
+  overflow-y: auto;
+  scrollbar-color: #999 transparent;
+}
+
+.chat-list .message.incoming {
+  margin-top: 1.5rem;
+}
+
+.chat-list .message .message-content {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+  align-items: center;
+}
+
+.chat-list .message .text {
+  color: var(--text-color);
+  white-space: pre-wrap;
+}
+
+.chat-list .message.error .text {
+  color: #e55865;
+}
+
+.chat-list .message.loading .text {
+  display: none;
+}
+
+.chat-list .message .avatar {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+  align-self: flex-start;
+}
+
+.chat-list .message.loading .avatar {
+  animation: rotate 3s linear infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.chat-list .message .icon {
+  color: var(--text-color);
+  cursor: pointer;
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  font-size: 1.25rem;
+  margin-left: 3.5rem;
+  visibility: hidden;
+}
+
+.chat-list .message .icon.hide {
+  visibility: hidden;
+}
+
+.chat-list .message:not(.loading, .error):hover .icon:not(.hide){
+  visibility: visible;
+}
+
+.chat-list .message .icon:hover {
+  background: var(--secondary-hover-color);
+}
+
+.chat-list .message .loading-indicator {
+  display: none;
+  gap: 0.8rem;
+  width: 100%;
+  flex-direction: column;
+}
+
+.chat-list .message.loading .loading-indicator {
+  display: flex;
+}
+
+.chat-list .message .loading-indicator .loading-bar {
+  height: 11px;
+  width: 100%;
+  border-radius: 0.135rem;
+  background-position: -800px 0;
+  background: linear-gradient(to right, #b70ee6, var(--primary-color), #6618e4);
+  animation: loading 3s linear infinite;
+}
+
+.chat-list .message .loading-indicator .loading-bar:last-child {
+  width: 70%;
+}
+
+@keyframes loading {
+  0% {
+    background-position: -800px 0;
+  }
+
+  100% {
+    background-position: 800px 0;
+  }
+}
+
+.typing-area {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  padding: 1rem;
+  background: var(--primary-color);
+}
+
+.typing-area :where(.typing-form, .action-buttons) {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.typing-form .input-wrapper {
+  width: 100%;
+  height: 56px;
+  display: flex;
+  position: relative;
+}
+
+.typing-form .typing-input {
+  height: 100%;
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  font-size: 1rem;
+  color: var(--text-color);
+  padding: 1.1rem 4rem 1.1rem 1.5rem;
+  border-radius: 100px;
+  background: var(--secondary-color);
+}
+
+.typing-form .typing-input:focus {
+  background: var(--secondary-hover-color);
+}
+
+.typing-form .typing-input::placeholder {
+  color: var(--placeholder-color);
+}
+
+.typing-area .icon {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  font-size: 1.4rem;
+  color: var(--text-color);
+  align-items: center;
+  justify-content: center;
+  background: var(--secondary-color);
+  transition: 0.2s ease;
+}
+
+.typing-area .icon:hover {
+  background: var(--secondary-hover-color);
+}
+
+.typing-form #send-message-button {
+  position: absolute;
+  right: 0;
+  outline: none;
+  border: none;
+  transform: scale(0);
+  background: transparent;
+  transition: transform 0.2s ease;
+}
+
+.typing-form .typing-input:valid ~ #send-message-button {
+  transform: scale(1);
+}
+
+.typing-area .disclaimer-text {
+  text-align: center;
+  font-size: 0.85rem;
+  margin-top: 1rem;
+  color: var(--placeholder-color);
+}
+
+/* Responsive media query code for small screen */
+@media (max-width: 768px) {
+  .header :is(.title, .subtitle) {
+    font-size: 2rem;
+    line-height: 2.6rem;
+  }
+
+  .header .subtitle {
+    font-size: 1.7rem;
+  }
+
+  .typing-area :where(.typing-form, .action-buttons) {
+    gap: 0.4rem;
+  }
+
+  .typing-form .input-wrapper {
+    height: 50px;
+  }
+
+  .typing-form .typing-input {
+    padding: 1.1rem 3.5rem 1.1rem 1.2rem;
+  }
+
+  .typing-area .icon {
+    height: 50px;
+    width: 50px;
+  }
+
+  .typing-area .disclaimer-text {
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+  }
+}
+
+.icon svg {
+  width: 24px;
+  height: 24px;
+  fill: var(--text-color); /* Ensure it matches the theme */
+}
+
+button.icon, span.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: var(--secondary-color);
+  border-radius: 50%;
+  transition: background 0.2s ease;
+}
+
+button.icon:hover, span.icon:hover {
+  background: var(--secondary-hover-color);
+}
+
+</style>
+<body>
+  <header class="header">
+    <!-- Header Greetings -->
+    <h1 class="title">Chào bạn</h1>
+    <p class="subtitle">Lumi có thể giúp gì cho bạn?</p>
+
+    <!-- Suggestion list -->
+    <ul class="suggestion-list">
+      <li class="suggestion">
+        <h4 class="text">Giúp tôi xây dựng một dự án game chơi cùng nhiều bạn bè.</h4>
+        <span class="icon material-symbols-rounded">draw</span>
+      </li>
+      <li class="suggestion">
+        <h4 class="text">Những mẹo giúp tôi cải thiện khả năng giao tiếp bằng tiếng anh?</h4>
+        <span class="icon material-symbols-rounded">lightbulb</span>
+      </li>
+      <li class="suggestion">
+        <h4 class="text">Bạn có thể giúp tôi tìm những tin tức mới nhất về phát triển web?</h4>
+        <span class="icon material-symbols-rounded">explore</span>
+      </li>
+      <li class="suggestion">
+        <h4 class="text">Viết mã JavaScript để tính tổng tất cả các phần tử trong một mảng.</h4>
+        <span class="icon material-symbols-rounded">code</span>
+      </li>
+    </ul>
+  </header>
+
+  <!-- Chat List / Container -->
+  <div class="chat-list"></div>
+
+  <!-- Typing Area -->
+  <div class="typing-area">
+    <form action="#" class="typing-form">
+      <div class="input-wrapper">
+        <input type="text" placeholder="Nhập tin nhắn tại đây" class="typing-input" required />
+        <button id="send-message-button" class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24" fill="currentColor">
+            <path d="M440 536v240h80V536h240v-80H520V216h-80v240H200v80h240Zm40 520q-82 0-155-31t-126-84q-54-54-84-126t-31-155q0-82 31-155t84-126q54-54 126-84t155-31q82 0 155 31t126 84q54 54 84 126t31 155q0 82-31 155t-84 126q-54 54-126 84t-155 31Z"/>
+          </svg>
+        </button>
+      </div>
+      <div class="action-buttons">
+        <span id="theme-toggle-button" class="icon material-symbols-rounded">Chế độ sáng/tối</span>
+        <span id="delete-chat-button" class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24" fill="currentColor">
+            <path d="M261 857q-33 0-56-23t-23-56V376h-64v-60h246v-40h232v40h246v60h-64v402q0 33-23 56t-56 23H261Zm438-481H261v402q0 5 4 9t9 4h372q5 0 9-4t4-9V376ZM310 737h60V457h-60v280Zm140 0h60V457h-60v280Zm140 0h60V457h-60v280Z"/>
+          </svg>
+        </span>
+      </div>
+    </form>
+    <p class="disclaimer-text">
+      Lumi có thể hiển thị thông tin không chính xác, bao gồm cả thông tin về con người, vì vậy hãy kiểm tra kỹ phản hồi của ai.<br>
+        © 2024 Lumi AI. All rights reserved by Nguyễn Hoàng Nam. 
+    </p>
+  </div>
+  <script>
+  const typingForm = document.querySelector(".typing-form");
+const chatContainer = document.querySelector(".chat-list");
+const suggestions = document.querySelectorAll(".suggestion");
+const toggleThemeButton = document.querySelector("#theme-toggle-button");
+const deleteChatButton = document.querySelector("#delete-chat-button");
+
+// State variables
+let userMessage = null;
+let isResponseGenerating = false;
+
+// API configuration
+const API_KEY = "AIzaSyDUqcmBLJzK0pSkoWqlc0vwJv3qrXGxINM"; // Your API key here
+const API_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=${API_KEY}`;
+
+// Load theme and chat data from local storage on page load
+const loadDataFromLocalstorage = () => {
+  const savedChats = localStorage.getItem("saved-chats");
+  const isLightMode = (localStorage.getItem("themeColor") === "light_mode");
+
+  // Apply the stored theme
+  document.body.classList.toggle("light_mode", isLightMode);
+  toggleThemeButton.innerText = isLightMode ? "dark_mode" : "light_mode";
+
+  // Restore saved chats or clear the chat container
+  chatContainer.innerHTML = savedChats || '';
+  document.body.classList.toggle("hide-header", savedChats);
+
+  chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
+}
+
+// Create a new message element and return it
+const createMessageElement = (content, ...classes) => {
+  const div = document.createElement("div");
+  div.classList.add("message", ...classes);
+  div.innerHTML = content;
+  return div;
+}
+
+// Show typing effect by displaying words one by one
+const showTypingEffect = (text, textElement, incomingMessageDiv) => {
+  const words = text.split(' ');
+  let currentWordIndex = 0;
+
+  const typingInterval = setInterval(() => {
+    // Append each word to the text element with a space
+    textElement.innerText += (currentWordIndex === 0 ? '' : ' ') + words[currentWordIndex++];
+    incomingMessageDiv.querySelector(".icon").classList.add("hide");
+
+    // If all words are displayed
+    if (currentWordIndex === words.length) {
+      clearInterval(typingInterval);
+      isResponseGenerating = false;
+      incomingMessageDiv.querySelector(".icon").classList.remove("hide");
+      localStorage.setItem("saved-chats", chatContainer.innerHTML); // Save chats to local storage
+    }
+    chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
+  }, 75);
+}
+
+// Fetch response from the API based on user message
+const generateAPIResponse = async (incomingMessageDiv) => {
+  const textElement = incomingMessageDiv.querySelector(".text"); // Getting text element
+
+  try {
+    // Send a POST request to the API with the user's message
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        contents: [{ 
+          role: "user", 
+          parts: [{ text: userMessage }] 
+        }] 
+      }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error.message);
+
+    // Get the API response text and remove asterisks from it
+    const apiResponse = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1");
+    showTypingEffect(apiResponse, textElement, incomingMessageDiv); // Show typing effect
+  } catch (error) { // Handle error
+    isResponseGenerating = false;
+    textElement.innerText = error.message;
+    textElement.parentElement.closest(".message").classList.add("error");
+  } finally {
+    incomingMessageDiv.classList.remove("loading");
+  }
+}
+
+// Show a loading animation while waiting for the API response
+const showLoadingAnimation = () => {
+  const html = `<div class="message-content">
+                  <img class="avatar" src="images/lumi.svg" alt="Lumi avatar">
+                  <p class="text"></p>
+                  <div class="loading-indicator">
+                    <div class="loading-bar"></div>
+                    <div class="loading-bar"></div>
+                    <div class="loading-bar"></div>
+                  </div>
+                </div>
+                <span onClick="copyMessage(this)" class="icon material-symbols-rounded">content_copy</span>`;
+
+  const incomingMessageDiv = createMessageElement(html, "incoming", "loading");
+  chatContainer.appendChild(incomingMessageDiv);
+
+  chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
+  generateAPIResponse(incomingMessageDiv);
+}
+
+// Copy message text to the clipboard
+const copyMessage = (copyButton) => {
+  const messageText = copyButton.parentElement.querySelector(".text").innerText;
+
+  navigator.clipboard.writeText(messageText);
+  copyButton.innerText = "done"; // Show confirmation icon
+  setTimeout(() => copyButton.innerText = "content_copy", 1000); // Revert icon after 1 second
+}
+
+// Handle sending outgoing chat messages
+const handleOutgoingChat = () => {
+  userMessage = typingForm.querySelector(".typing-input").value.trim() || userMessage;
+  if(!userMessage || isResponseGenerating) return; // Exit if there is no message or response is generating
+
+  isResponseGenerating = true;
+
+  const html = `<div class="message-content">
+                  <img class="avatar" src="images/user.jpg" alt="User avatar">
+                  <p class="text"></p>
+                </div>`;
+
+  const outgoingMessageDiv = createMessageElement(html, "outgoing");
+  outgoingMessageDiv.querySelector(".text").innerText = userMessage;
+  chatContainer.appendChild(outgoingMessageDiv);
+  
+  typingForm.reset(); // Clear input field
+  document.body.classList.add("hide-header");
+  chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
+  setTimeout(showLoadingAnimation, 500); // Show loading animation after a delay
+}
+
+// Toggle between light and dark themes
+toggleThemeButton.addEventListener("click", () => {
+  const isLightMode = document.body.classList.toggle("light_mode");
+  localStorage.setItem("themeColor", isLightMode ? "light_mode" : "dark_mode");
+  toggleThemeButton.innerText = isLightMode ? "dark_mode" : "light_mode";
+});
+
+// Delete all chats from local storage when button is clicked
+deleteChatButton.addEventListener("click", () => {
+  if (confirm("Bạn có chắc chắn muốn xóa tất cả đoạn chat?")) {
+    localStorage.removeItem("saved-chats");
+    loadDataFromLocalstorage();
+  }
+});
+
+// Set userMessage and handle outgoing chat when a suggestion is clicked
+suggestions.forEach(suggestion => {
+  suggestion.addEventListener("click", () => {
+    userMessage = suggestion.querySelector(".text").innerText;
+    handleOutgoingChat();
+  });
+});
+
+// Prevent default form submission and handle outgoing chat
+typingForm.addEventListener("submit", (e) => {
+  e.preventDefault(); 
+  handleOutgoingChat();
+});
+
+loadDataFromLocalstorage();
+  </script>
+</body>
+</html>
