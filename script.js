@@ -34,6 +34,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById('chatbot.html').value = data.html.chatbot || "";
             document.getElementById('css-chatbot').value = data.css.chatbot || "";
             document.getElementById('js-chatbot').value = data.javascript.chatbot || "";
+
+            document.getElementById('so.html').value = data.html.so || "";
         } catch (error) {
             console.error("Không thể tải dữ liệu JSON:", error);
         }
